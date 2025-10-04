@@ -13,6 +13,7 @@ public class DebugOverlay : MonoBehaviour
         float speed = rb.linearVelocity.magnitude;
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
+        
 
         debugText.text =
             "Speed: " + speed.ToString("F2") + "\n" +
