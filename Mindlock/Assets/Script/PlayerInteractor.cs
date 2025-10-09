@@ -26,6 +26,7 @@ public class PlayerInteractor : MonoBehaviour
 
         if (currentInteractable != null)
         {
+
             promptText.text = currentInteractable.GetPromptMessage();
             promptText.enabled = true;
 
