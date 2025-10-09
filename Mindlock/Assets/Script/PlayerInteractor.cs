@@ -8,16 +8,21 @@ public class PlayerInteractor : MonoBehaviour
 {
     public int cogwheelCount = 0;
     public int totalCogwheels = 3;
-    public TMP_Text cogwheelObjectiveText;
+
+    public TMP_Text objectiveTitleText; // nový odkaz na nadpis
+    public TMP_Text objectiveText;      // nový odkaz na text úkolu
+    public TMP_Text promptText;
 
     public float interactRadius = 2f;    //v jaké vzalenosti bude objekt s hráèem reagovat
-    public TMP_Text promptText;
 
     private IInteractable currentInteractable;
 
     private void Start()
     {
-
+        objectiveTitleText.text = "Objectives";
+        objectiveTitleText.color = Color.yellow;
+        objectiveText.text = "- Stop the gas";
+        objectiveText.color = Color.yellow; // zmìna na žlutou hned na zaèátku
     }
 
     void Update()
@@ -70,18 +75,14 @@ public class PlayerInteractor : MonoBehaviour
     public void AddCogwheel()
     {
         cogwheelCount++;
+        Debug.Log($"Cogwheels: {cogwheelCount}/{totalCogwheels}");
 
         if (cogwheelCount == totalCogwheels)
         {
-            cogwheelObjectiveText.text = "All cogwheels found," + "\n" +
-                   "doors are unlocked!";
-                                
-        }
-        else
-        {
-            cogwheelObjectiveText.text = "Find cogwheels " + cogwheelCount + "/" + totalCogwheels;
+            objectiveText.text = "- Stop the gas";
+            objectiveText.color = Color.yellow; // Zmìní barvu na žlutou
+            Debug.Log("Objective splnìn, barva zmìnìna na žlutou.");
         }
     }
-
 }
 
