@@ -21,7 +21,7 @@ public class PlayerInteractor : MonoBehaviour
     {
         objectiveTitleText.text = "Objectives";
         objectiveTitleText.color = Color.yellow;
-        objectiveText.text = "- Stop the gas";
+        objectiveText.text = "1. Stop the gas";
         objectiveText.color = Color.yellow; // zmìna na žlutou hned na zaèátku
     }
 
@@ -80,9 +80,9 @@ public class PlayerInteractor : MonoBehaviour
 
         if (cogwheelCount == totalCogwheels)
         {
-            objectiveText.text = "- Stop the gas";
-            objectiveText.color = Color.yellow; // Zmìní barvu na žlutou
-            Debug.Log("Objective splnìn, barva zmìnìna na žlutou.");
+            objectiveText.text = "<s>1. Stop the gas</s>";
+            objectiveText.color = Color.white; // Zmìní barvu na bílou
+            Debug.Log("Objective splnìn, barva zmìnìna na bílou a text pøeškrtnut.");
         }
     }
 }
