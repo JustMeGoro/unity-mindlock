@@ -9,7 +9,6 @@ public class PlayerInteractor : MonoBehaviour
     public int cogwheelCount = 0;
     public int totalCogwheels = 3;
 
-    public TMP_Text objectiveTitleText; // nový odkaz na nadpis
     public TMP_Text objectiveText;      // nový odkaz na text úkolu
     public TMP_Text promptText;
 
@@ -19,10 +18,7 @@ public class PlayerInteractor : MonoBehaviour
 
     private void Start()
     {
-        objectiveTitleText.text = "Objectives";
-        objectiveTitleText.color = Color.yellow;
-        objectiveText.text = "1. Stop the gas";
-        objectiveText.color = Color.yellow; // zmìna na žlutou hned na zaèátku
+    
     }
 
     void Update()
