@@ -21,7 +21,7 @@ public class PlayerInteractor : MonoBehaviour
 
     private void Start()
     {
-        // Kontrola, že reference jsou pøiøazené a GameObjecty aktivní
+        // Kontrola, Å¾e reference jsou pÃ¸iÃ¸azenÃ© a GameObjecty aktivnÃ­
         if (objectiveTitleText != null && objectiveTitleText.gameObject.activeInHierarchy)
         {
             objectiveTitleText.text = "Objectives";
@@ -49,6 +49,7 @@ public class PlayerInteractor : MonoBehaviour
 
         if (currentInteractable != null && promptText != null && promptText.gameObject.activeInHierarchy)
         {
+
             promptText.text = currentInteractable.GetPromptMessage();
             promptText.enabled = true;
 
@@ -111,7 +112,7 @@ public class PlayerInteractor : MonoBehaviour
         if (cogwheelCount == totalCogwheels)
         {
             objectiveCompleted = true;
-            Debug.Log("Objective splnìn, barva zmìnìna na bílou a text pøeškrtnut.");
+            Debug.Log("Objective splnÃ¬n, barva zmÃ¬nÃ¬na na bÃ­lou a text pÃ¸eÅ¡krtnut.");
         }
     }
 }
