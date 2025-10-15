@@ -1157,7 +1157,7 @@ TextureImporter:
       name: goro_wall_textures01_46
       rect:
         serializedVersion: 2
-        x: 288
+        x: 287
         y: 288
         width: 32
         height: 32
@@ -1179,7 +1179,7 @@ TextureImporter:
       name: goro_wall_textures01_47
       rect:
         serializedVersion: 2
-        x: 320
+        x: 319
         y: 288
         width: 32
         height: 32
@@ -1223,7 +1223,7 @@ TextureImporter:
       name: goro_wall_textures01_49
       rect:
         serializedVersion: 2
-        x: 384
+        x: 381
         y: 288
         width: 32
         height: 32
@@ -1245,7 +1245,7 @@ TextureImporter:
       name: goro_wall_textures01_50
       rect:
         serializedVersion: 2
-        x: 416
+        x: 413
         y: 288
         width: 32
         height: 32
@@ -1443,7 +1443,7 @@ TextureImporter:
       name: goro_wall_textures01_59
       rect:
         serializedVersion: 2
-        x: 288
+        x: 287
         y: 256
         width: 32
         height: 32
@@ -1465,7 +1465,7 @@ TextureImporter:
       name: goro_wall_textures01_60
       rect:
         serializedVersion: 2
-        x: 320
+        x: 319
         y: 256
         width: 32
         height: 32
@@ -1509,7 +1509,7 @@ TextureImporter:
       name: goro_wall_textures01_62
       rect:
         serializedVersion: 2
-        x: 384
+        x: 381
         y: 256
         width: 32
         height: 32
@@ -1531,7 +1531,7 @@ TextureImporter:
       name: goro_wall_textures01_63
       rect:
         serializedVersion: 2
-        x: 416
+        x: 413
         y: 256
         width: 32
         height: 32
