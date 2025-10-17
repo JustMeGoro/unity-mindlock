@@ -1,0 +1,76 @@
+using UnityEngine;
+using TMPro;
+using System.Collections;
+
+public class TypewriterEffect : MonoBehaviour
+{
+    // Zvolení objektù
+    public TMP_Text objectiveTitle;   // Text pro "OBJECTIVE"
+    public TMP_Text objectiveText;    // Text pro samotný úkol
+    public CanvasGroup objectiveUnderline; // Podtrhnutí
+
+    // Co se kde napíše
+    public string title = "OBJECTIVE"; 
+    public string task = "Stop the gas";
+
+    // Urèení delayù
+    public float letterDelay = 0.05f;
+    public float startDelay = 1f; // èekání pøed zaèátkem
+
+    // Volba audia
+    public AudioSource audioSource;
+    public AudioClip typeSound;
+
+    void Start()
+    {
+        objectiveTitle.text = "";
+        objectiveText.text = "";
+        objectiveUnderline.alpha = 0;
+        StartCoroutine(ShowObjective());
+    }
+
+    IEnumerator ShowObjective()
+    {
+        yield return new WaitForSeconds(startDelay);
+
+        // Spustíme zvuk
+        audioSource.loop = true; // aby se opakoval, pokud je krátký
+        audioSource.clip = typeSound;
+        audioSource.Play();
+
+        // Efekt psaní pro title
+        foreach (char c in title)
+        {
+            objectiveTitle.text += c;
+            yield return new WaitForSeconds(letterDelay);
+        }
+
+        audioSource.Stop();
+        yield return StartCoroutine(FadeIn(objectiveUnderline, 1f));
+        audioSource.Play();
+
+        // Efekt psaní pro úkol
+        foreach (char c in task)
+        {
+            objectiveText.text += c;
+            yield return new WaitForSeconds(letterDelay);
+        }
+
+        // Po dokonèení zastav zvuk
+        audioSource.Stop();
+        audioSource.loop = false;
+    }
+
+    IEnumerator FadeIn(CanvasGroup group, float duration)
+    {
+        float time = 0;
+        group.alpha = 0;
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            group.alpha = Mathf.Lerp(0, 1, time / duration);
+            yield return null;
+        }
+        group.alpha = 1;
+    }
+}
