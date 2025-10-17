@@ -31,7 +31,7 @@ public class PlayerInteractor : MonoBehaviour
     {
 
         CheckForInteractable();
-        
+
         if (currentInteractable != null && promptText != null && promptText.gameObject.activeInHierarchy)
         {
             promptText.text = currentInteractable.GetPromptMessage();

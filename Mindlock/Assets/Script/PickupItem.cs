@@ -14,7 +14,7 @@ public class PickupItem : MonoBehaviour, IInteractable
 
     public string GetPromptMessage()
     {
-        if(PlayerInteractor.Instance.isHoldingItem == false)
+        if (PlayerInteractor.Instance.isHoldingItem == false)
         {
             return "press E to pick up " + itemName;
         }
