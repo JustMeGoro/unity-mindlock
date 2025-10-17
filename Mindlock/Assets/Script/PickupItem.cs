@@ -13,6 +13,8 @@ public class PickupItem : MonoBehaviour, IInteractable
     public itemType itemType;
     public Sprite itemIcon;
 
+    public AudioSource cogwheelPickupAudioSource;
+
     public string GetPromptMessage()
     {
         if (PlayerInteractor.Instance.isHoldingItem == false) //pokud postava nic nedrží tak...
@@ -36,9 +38,10 @@ public class PickupItem : MonoBehaviour, IInteractable
         Debug.Log("Picked up " + itemName); 
 
         InventoryUI.instance.AddItem(itemIcon); // pøidá do slotu obrázek itemu
+        cogwheelPickupAudioSource.Play();
+        gameObject.SetActive(false); // item zmizí ze zemì
 
         PlayerInteractor.Instance.isHoldingItem = true; // zmìní bool že postava nìco drží
 
-        gameObject.SetActive(false); // item zmizí ze zemì
     }
 }

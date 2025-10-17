@@ -18,11 +18,16 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveDirection;
 
 
+    // zvuk krokù
+    public AudioSource footstepSource;
+
+
     // Update is called once per frame
     void Update()
     {
         inputProccesing();
         Animate();
+        WalkingSoundEffect();
     }
 
     private void FixedUpdate()
@@ -60,6 +65,21 @@ public class PlayerMovement : MonoBehaviour
             anim.SetFloat("Y", moveY);
         }
 
-        anim.SetBool("Moving", moving);
+
+            anim.SetBool("Moving", moving);
+    }
+
+    void WalkingSoundEffect()
+    {
+        if (rb.linearVelocity.magnitude > 0.1f)
+        {
+            if (!footstepSource.isPlaying)
+                footstepSource.Play();
+        }
+        else
+        {
+            if (footstepSource.isPlaying)
+                footstepSource.Pause();
+        }
     }
 }
