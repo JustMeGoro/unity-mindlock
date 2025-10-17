@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 public enum itemType
@@ -10,7 +9,6 @@ public class PickupItem : MonoBehaviour, IInteractable
 {
     public string itemName = "Item";
     public itemType itemType;
-    public Sprite itemIcon;
 
     public string GetPromptMessage()
     {
@@ -24,23 +22,17 @@ public class PickupItem : MonoBehaviour, IInteractable
         }
     }
 
-
-
     public void Interact()
     {
 
-        if (PlayerInteractor.Instance.isHoldingItem)
-        {
-            Debug.Log("Už drží item");
-            return;
-        }
-
-
         Debug.Log("Picked up " + itemName);
 
-        InventoryUI.instance.AddItem(itemIcon);
+        PlayerInteractor player = Object.FindFirstObjectByType<PlayerInteractor>();
 
-        PlayerInteractor.Instance.isHoldingItem = true;
+        if (itemType == itemType.Cogwheel)
+        {
+            player.AddCogwheel();
+        }
 
         gameObject.SetActive(false);
     }
