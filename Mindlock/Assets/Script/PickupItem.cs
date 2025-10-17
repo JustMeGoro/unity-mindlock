@@ -9,6 +9,7 @@ public class PickupItem : MonoBehaviour, IInteractable
 {
     public string itemName = "Item";
     public itemType itemType;
+    public Sprite itemIcon;
 
     public string GetPromptMessage()
     {
@@ -25,14 +26,16 @@ public class PickupItem : MonoBehaviour, IInteractable
     public void Interact()
     {
 
+        if (PlayerInteractor.Instance.isHoldingItem == true)
+        {
+            return;
+        }
+
         Debug.Log("Picked up " + itemName);
 
-        PlayerInteractor player = Object.FindFirstObjectByType<PlayerInteractor>();
+        InventoryUI.instance.AddItem(itemIcon);
 
-        if (itemType == itemType.Cogwheel)
-        {
-            player.AddCogwheel();
-        }
+        PlayerInteractor.Instance.isHoldingItem = true;
 
         gameObject.SetActive(false);
     }
