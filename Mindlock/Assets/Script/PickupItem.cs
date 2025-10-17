@@ -12,7 +12,14 @@ public class PickupItem : MonoBehaviour, IInteractable
 
     public string GetPromptMessage()
     {
-        return "press E to pick up " + itemName;
+        if (PlayerInteractor.Instance.isHoldingItem == false)
+        {
+            return "press E to pick up " + itemName;
+        }
+        else
+        {
+            return "you are already holding something";
+        }
     }
 
     public void Interact()
