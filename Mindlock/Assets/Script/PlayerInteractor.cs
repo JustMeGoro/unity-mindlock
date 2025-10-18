@@ -1,3 +1,4 @@
+using NUnit.Framework.Interfaces;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -5,115 +6,62 @@ using UnityEngine.UI;
 
 public class PlayerInteractor : MonoBehaviour
 {
-    public int cogwheelCount = 0;
-    public int totalCogwheels = 3;
+    public static PlayerInteractor Instance; // vytvoøí promìnnou pro odkaz na tento script
 
-    public GameObject objectivePanel;
-    public TMP_Text objectiveTitleText;
-    public TMP_Text objectiveText;
+    public bool isHoldingItem = false; // promìnná bool co urèuje jestli postava nìco drží
+
     public TMP_Text promptText;
 
-    public float interactRadius = 2f;
+    public float interactRadius = 2f; // radius ve kterém postava mùže používat vìci
 
-    private IInteractable currentInteractable;
-    private bool objectiveCompleted = false;
+    private IInteractable currentInteractable; // momentální interactable
  
 
     private void Start()
     {
-        // Kontrola, Å¾e reference jsou pÃ¸iÃ¸azenÃ© a GameObjecty aktivnÃ­
-        if (objectiveTitleText != null && objectiveTitleText.gameObject.activeInHierarchy)
-        {
-            objectiveTitleText.text = "Objectives";
-            objectiveTitleText.color = Color.black;
-        }
-        if (objectiveText != null && objectiveText.gameObject.activeInHierarchy)
-        {
-            objectiveText.text = "1. Stop the gas";
-            objectiveText.color = Color.black;
-        }
+        Instance = this; // do promìnné instance uloží odkaz na tento script
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T) && objectivePanel != null)
+
+        CheckForInteractable(); //pøejde na void CheckForInteractables
+
+        if (currentInteractable != null && promptText != null && promptText.gameObject.activeInHierarchy) // jestli se CheckForInteractables vrátilo s itemem tak...
         {
-            bool isActive = objectivePanel.activeSelf;
-            objectivePanel.SetActive(!isActive);
-        }
+            promptText.text = currentInteractable.GetPromptMessage(); // napíše na obrazovku jaký item lze vzít
+            promptText.enabled = true; // zobrazí text na obrazovce
 
-        if (objectivePanel != null && !objectivePanel.activeSelf)
-            return;
-
-        CheckForInteractable();
-
-        if (currentInteractable != null && promptText != null && promptText.gameObject.activeInHierarchy)
-        {
-
-            promptText.text = currentInteractable.GetPromptMessage();
-            promptText.enabled = true;
-
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && isHoldingItem == false) // pokud se zmáèkne klávesa E a zároveò postava nic nedrží tak...
             {
-                currentInteractable.Interact();
-                promptText.enabled = false;
+                currentInteractable.Interact(); // item vezme do rukou a zobrazí se v inventáøi
+                promptText.enabled = false; // odstraní text pro sebrání pomocí klávesy E z obrazovky
             }
         }
-        else if (promptText != null && promptText.gameObject.activeInHierarchy)
+        else if (promptText != null && promptText.gameObject.activeInHierarchy) // Jinak...
         {
-            promptText.enabled = false;
-        }
-
-        // Nastav text a barvu podle stavu objectiveCompleted
-        if (objectivePanel != null && objectivePanel.activeSelf && objectiveText != null)
-        {
-            if (objectiveCompleted)
-            {
-                objectiveText.text = "<s>1. Stop the gas</s>";
-                objectiveText.color = Color.white;
-            }
-            else
-            {
-                objectiveText.text = "1. Stop the gas";
-                objectiveText.color = Color.black;
-            }
+            promptText.enabled = false; // text pro sebrání pomocí klávesy E se na obrazovce nezobrazí
         }
     }
 
-    void CheckForInteractable()
+    void CheckForInteractable() // hledá v okolí postavy itemy se kterýma mùže interaktovat
     {
+        // hledání itemù v okolí a vytvoøí list s danýma itemama
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRadius);
         var interactables = hits
             .Select(h => h.GetComponent<IInteractable>())
             .Where(i => i != null)
             .ToList();
 
-        if (interactables.Count > 0)
+        if (interactables.Count > 0) // pokud je v okolí alespoò jeden item tak..
         {
-            currentInteractable = interactables[0];
+            currentInteractable = interactables[0]; // první item v seznamu uloží do promenné
         }
         else
         {
-            currentInteractable = null;
+            currentInteractable = null; // jinak bude promenná prázdná
         }
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactRadius);
-    }
-
-    public void AddCogwheel()
-    {
-        cogwheelCount++;
-        Debug.Log($"Cogwheels: {cogwheelCount}/{totalCogwheels}");
-
-        if (cogwheelCount == totalCogwheels)
-        {
-            objectiveCompleted = true;
-            Debug.Log("Objective splnÃ¬n, barva zmÃ¬nÃ¬na na bÃ­lou a text pÃ¸eÅ¡krtnut.");
-        }
-    }
 }
 

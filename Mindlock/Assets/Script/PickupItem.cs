@@ -1,32 +1,47 @@
 using UnityEngine;
 
-public enum itemType
+
+public enum itemType    // list itemù
 {
     Cogwheel
 }
 
 public class PickupItem : MonoBehaviour, IInteractable
 {
-    public string itemName = "Item";
+    // volby v inspektoru
+    public string itemName = "Item"; 
     public itemType itemType;
+    public Sprite itemIcon;
+
+    public AudioSource cogwheelPickupAudioSource;
 
     public string GetPromptMessage()
     {
-        return "press E to pick up " + itemName;
+        if (PlayerInteractor.Instance.isHoldingItem == false) //pokud postava nic nedrží tak...
+        {
+            return "press E to pick up " + itemName; // napíše jaký item mùže postava vzít
+        }
+        else
+        {
+            return "you are already holding something"; // napíše že už nìco postava drží
+        }
     }
 
     public void Interact()
     {
 
-        Debug.Log("Picked up " + itemName);
-
-        PlayerInteractor player = Object.FindFirstObjectByType<PlayerInteractor>();
-
-        if (itemType == itemType.Cogwheel)
+        if (PlayerInteractor.Instance.isHoldingItem == true) // pokud nìco postava drží tak se okamžitì vráti
         {
-            player.AddCogwheel();
+            return;
         }
 
-        gameObject.SetActive(false);
+        Debug.Log("Picked up " + itemName); 
+
+        InventoryUI.instance.AddItem(itemIcon); // pøidá do slotu obrázek itemu
+        cogwheelPickupAudioSource.Play();
+        gameObject.SetActive(false); // item zmizí ze zemì
+
+        PlayerInteractor.Instance.isHoldingItem = true; // zmìní bool že postava nìco drží
+
     }
 }
