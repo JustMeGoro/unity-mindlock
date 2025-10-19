@@ -36,6 +36,7 @@ public class PlayerInteractor : MonoBehaviour
             {
                 currentInteractable.Interact(); // item vezme do rukou a zobrazí se v inventáøi
                 promptText.enabled = false; // odstraní text pro sebrání pomocí klávesy E z obrazovky
+                isHoldingItem = true;
             }
         }
         else if (promptText != null && promptText.gameObject.activeInHierarchy) // Jinak...
