@@ -1,5 +1,6 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Video;
 
 public class BoilerInteract : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class BoilerInteract : MonoBehaviour
     public AudioSource metalClank;
     private bool playerInRange = false;
     private bool cogwheelInPlace = false;
+    public VideoPlayer videoPlayer;
 
     void Start()
     {
@@ -46,6 +48,8 @@ public class BoilerInteract : MonoBehaviour
                 Debug.Log("Final cogwheel placed!");
 
                 TypewriterEffect.Instance.RemoveObjective();
+
+                videoPlayer.Play();
 
             }
         }
