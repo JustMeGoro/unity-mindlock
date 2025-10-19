@@ -11,6 +11,14 @@ public class InventoryUI : MonoBehaviour
         slot.enabled = false; // obrázek ve slotu zneviditelní
     }
 
+    private void Update()
+    {
+        if (PlayerInteractor.Instance.isHoldingItem == false)
+        {
+            slot.enabled = false ;
+        }
+    }
+
     void Awake()
     {
         instance = this; // pøi startu uložíme odkaz na tento skript do instance

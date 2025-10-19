@@ -4,6 +4,8 @@ using System.Collections;
 
 public class TypewriterEffect : MonoBehaviour
 {
+    public static TypewriterEffect Instance;
+
     // Zvolení objektù
     public TMP_Text objectiveTitle;   // Text pro "OBJECTIVE"
     public TMP_Text objectiveText;    // Text pro samotný úkol
@@ -20,6 +22,11 @@ public class TypewriterEffect : MonoBehaviour
     // Volba audia
     public AudioSource audioSource;
     public AudioClip typeSound;
+
+    void Awake()
+    {
+        Instance = this;   
+    }
 
     void Start()
     {
@@ -59,6 +66,23 @@ public class TypewriterEffect : MonoBehaviour
         // Po dokonèení zastav zvuk
         audioSource.Stop();
         audioSource.loop = false;
+    }
+
+    public void RemoveObjective(float letterDelayOverride = -1f)
+    {
+        // pokud je -1 použij defaultní delay
+        float delay = letterDelayOverride > 0 ? letterDelayOverride : letterDelay;
+        StartCoroutine(RemoveTaskCoroutine(delay));
+    }
+
+    private IEnumerator RemoveTaskCoroutine(float delay)
+    {
+        // Odmazávání textu úkolu po písmenech
+        while (objectiveText.text.Length > 0)
+        {
+            objectiveText.text = objectiveText.text.Substring(0, objectiveText.text.Length - 1);
+            yield return new WaitForSeconds(delay);
+        }
     }
 
     IEnumerator FadeIn(CanvasGroup group, float duration)
