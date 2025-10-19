@@ -33,7 +33,7 @@ public class PipeInteract : MonoBehaviour
             {
                 interactionText.text = "Press E to place cogwheel";
                 interactionText.enabled = true;
-                Debug.Log("Lol");
+                Debug.Log("Cogwheel was placed on a pipe");
             }
 
             if (Input.GetKeyDown(KeyCode.E))
