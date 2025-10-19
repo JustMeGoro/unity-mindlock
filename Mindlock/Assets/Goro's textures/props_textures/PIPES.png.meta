@@ -172,7 +172,7 @@ TextureImporter:
       name: PIPES_3
       rect:
         serializedVersion: 2
-        x: 160
+        x: 165
         y: 107
         width: 32
         height: 32
@@ -194,7 +194,7 @@ TextureImporter:
       name: PIPES_4
       rect:
         serializedVersion: 2
-        x: 192
+        x: 197
         y: 107
         width: 32
         height: 32
@@ -260,7 +260,7 @@ TextureImporter:
       name: PIPES_7
       rect:
         serializedVersion: 2
-        x: 160
+        x: 165
         y: 75
         width: 32
         height: 32
@@ -282,7 +282,7 @@ TextureImporter:
       name: PIPES_8
       rect:
         serializedVersion: 2
-        x: 192
+        x: 197
         y: 75
         width: 32
         height: 32
@@ -348,7 +348,7 @@ TextureImporter:
       name: PIPES_11
       rect:
         serializedVersion: 2
-        x: 160
+        x: 165
         y: 43
         width: 32
         height: 32
@@ -370,7 +370,7 @@ TextureImporter:
       name: PIPES_12
       rect:
         serializedVersion: 2
-        x: 192
+        x: 197
         y: 43
         width: 32
         height: 32
@@ -392,7 +392,7 @@ TextureImporter:
       name: PIPES_13
       rect:
         serializedVersion: 2
-        x: 160
+        x: 165
         y: 11
         width: 32
         height: 32
