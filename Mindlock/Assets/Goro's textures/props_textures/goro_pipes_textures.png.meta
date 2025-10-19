@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 88d12ad78391e524fb2500d6880dcf29
+guid: 9cf07b8ae6b23994d8c78165a16270ea
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5933261652459859058
-    second: output-onlinepngtools (1)_0
+      213: -3802432210170911072
+    second: goro_pipes_textures_0
+  - first:
+      213: 1252732239081249644
+    second: goro_pipes_textures_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +40,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +54,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -75,7 +78,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,23 +103,54 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: output-onlinepngtools (1)_0
+      name: goro_pipes_textures_0
       rect:
         serializedVersion: 2
-        x: 43
-        y: 27
-        width: 200
-        height: 204
+        x: 32
+        y: 43
+        width: 96
+        height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline:
+      - - {x: 48, y: 36}
+        - {x: 19, y: 36}
+        - {x: -48, y: 38}
+        - {x: -47, y: -40}
+        - {x: -20, y: -40}
+        - {x: -20, y: 17}
+        - {x: 19, y: 17}
+        - {x: 19, y: -41}
+        - {x: 48, y: -41}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a6624e0d0c0b3bc0800000000000000
+      internalID: -3802432210170911072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: goro_pipes_textures_1
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 43
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e83dead76f1d8ada0800000000000000
-      internalID: -5933261652459859058
+      spriteID: c6b1e1d8559926110800000000000000
+      internalID: 1252732239081249644
       vertices: []
       indices: 
       edges: []
@@ -125,7 +159,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 743158daa09571a48808338f36097e53
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +169,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      output-onlinepngtools (1)_0: -5933261652459859058
+      goro_pipes_textures_0: -3802432210170911072
+      goro_pipes_textures_1: 1252732239081249644
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
