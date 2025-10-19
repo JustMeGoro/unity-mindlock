@@ -24,10 +24,10 @@ public class PipeInteract : MonoBehaviour
     {
         allPipes.Add(this);
 
-        // cogwheel zpoË·tku skryt˝
+        // cogwheel zpo√®√°tku skryt√Ω
         cogwheelOnPipe.SetActive(false);
 
-        // Text zpoË·tku skryt˝
+        // Text zpo√®√°tku skryt√Ω
         if (interactionText != null)
             interactionText.enabled = false;
     }
@@ -39,14 +39,14 @@ public class PipeInteract : MonoBehaviour
 
     void Update()
     {
-        // pokud je hr·Ë v dosahu, zobraz text
+        // pokud je hr√°√® v dosahu, zobraz text
         if (playerInRange && PlayerInteractor.Instance != null && PlayerInteractor.Instance.isHoldingItem == true && cogwheelInPlace == false)
         {
             if (interactionText != null && !interactionText.enabled)
             {
                 interactionText.text = "Press E to place cogwheel";
                 interactionText.enabled = true;
-                Debug.Log("Entered range");
+                Debug.Log("Cogwheel was placed on a pipe");
             }
 
             if (Input.GetKeyDown(KeyCode.E))
@@ -62,7 +62,7 @@ public class PipeInteract : MonoBehaviour
         }
         else
         {
-            // pokud hr·Ë odejde, skryj text
+            // pokud hr√°√® odejde, skryj text
             if (interactionText != null && interactionText.enabled)
                 interactionText.enabled = false;
             Debug.Log("Exited range");

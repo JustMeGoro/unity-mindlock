@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI; // pokud používáš UI Text (Canvas)
 
 public class DoorInteraction : MonoBehaviour
@@ -22,7 +23,7 @@ public class DoorInteraction : MonoBehaviour
         if (playerIsNear && Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("Entering next room...");
-            // TODO: sem mùžeš dát pøechod do další scény, animaci dveøí atd.
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 
