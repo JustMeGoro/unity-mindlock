@@ -1,27 +1,40 @@
-using TMPro;
+using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 
 public class PipeInteract : MonoBehaviour
 {
+    public static List<PipeInteract> allPipes = new List<PipeInteract>();
+
+    public AudioSource metalClank;
+
     public TMP_Text interactionText;       // UI text "Press E to place cogwheel"
     public string playerTag = "Player";
 
     public GameObject cogwheelOnPipe;
     private bool playerInRange = false;
 
-    private bool cogwheelInPlace = false;
+    public bool cogwheelInPlace = false;
+    public int cogwheelPlaced = 0;
 
     void Start()
     {
+        allPipes.Add(this);
+
         // cogwheel zpoèátku skrytý
         cogwheelOnPipe.SetActive(false);
 
         // Text zpoèátku skrytý
         if (interactionText != null)
             interactionText.enabled = false;
+    }
+
+    void OnDestroy()
+    {
+        allPipes.Remove(this);
     }
 
     void Update()
@@ -33,14 +46,18 @@ public class PipeInteract : MonoBehaviour
             {
                 interactionText.text = "Press E to place cogwheel";
                 interactionText.enabled = true;
-                Debug.Log("Lol");
+                Debug.Log("Entered range");
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Debug.Log("E pressed");
                 cogwheelOnPipe.SetActive(true);
-                cogwheelInPlace =true;
+                cogwheelInPlace = true;
+                PlayerInteractor.Instance.isHoldingItem = false;
+                cogwheelPlaced++;
+                metalClank.Play();
+                
             }
         }
         else
@@ -48,6 +65,7 @@ public class PipeInteract : MonoBehaviour
             // pokud hráè odejde, skryj text
             if (interactionText != null && interactionText.enabled)
                 interactionText.enabled = false;
+            Debug.Log("Exited range");
         }
     }
 
