@@ -1,36 +1,213 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; // pokud používáš UI Text (Canvas)
+using UnityEngine.UI;
+using System.Collections;
 
 public class DoorInteraction : MonoBehaviour
 {
-    public static DoorInteraction Instance;
-
     [Header("UI Settings")]
-    public string interactionText; // obsah interaction textu
+    public string interactionText = "Press E to enter"; // text u dveøí
+    public Image fadeImage; // UI Image (èerný fade panel) - nepovinné, fallback se vytvoøí automaticky
 
     [Header("Player Detection")]
     public string playerTag = "Player"; // tag hráèe
 
-    private bool playerIsNear = false;
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip doorOpen;
+    public AudioClip doorClose;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    [Header("Animation")]
+    public Animator doorAnimator; // Animator dveøí (volitelný)
+    public string openTrigger = "Open";
+
+    private bool playerIsNear = false;
+    private bool isTransitioning = false;
+
+    // runtime persistent objects
+    private GameObject persistentFadeGO;
+    private Image persistentFadeImage;
+    private GameObject persistentAudioGO;
+    private AudioSource persistentAudioSource;
+
+    // persistent helper on the persistent fade GO (survives scene load)
+    private PersistentTransition persistentTransition;
 
     private void Start()
     {
-        playerIsNear = false;
+        // pokud už máš pøiøazený fadeImage nastav jeho prùhlednost
+        if (fadeImage != null)
+        {
+            Color c = fadeImage.color;
+            fadeImage.color = new Color(c.r, c.g, c.b, 0f);
+        }
     }
 
     void Update()
     {
-        if (playerIsNear && Input.GetKeyDown(KeyCode.E))
+        if (playerIsNear && !isTransitioning && Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("Entering next room...");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            StartCoroutine(EnterNextRoom());
         }
+    }
+
+    IEnumerator EnterNextRoom()
+    {
+        isTransitioning = true;
+
+        if (UIManager.Instance != null)
+            UIManager.Instance.HideText();
+
+        // animace dveøí
+        if (doorAnimator != null && !string.IsNullOrEmpty(openTrigger))
+            doorAnimator.SetTrigger(openTrigger);
+
+        // zajistíme persistentní fade image (fallback) a okamžitì ztmavíme obrazovku
+        EnsurePersistentFadeExists();
+        yield return StartCoroutine(FadeScreenTo(1f)); // FADE TO BLACK pøed open zvukem
+
+        // pøiprav persistentní audio pøed pøehráním open, aby open dohrálo i pøes naèítání scény
+        PreparePersistentAudioForClose();
+
+        // pøehraj open na persistentním source (fallback na lokální pokud persistent chybí)
+        if (persistentAudioSource != null && doorOpen != null)
+        {
+            persistentAudioSource.PlayOneShot(doorOpen);
+            yield return new WaitForSeconds(doorOpen.length);
+        }
+        else if (audioSource != null && doorOpen != null)
+        {
+            audioSource.PlayOneShot(doorOpen);
+            yield return new WaitForSeconds(doorOpen.length);
+        }
+        else
+        {
+            // žádný clip / source -> pokraèujeme bez èekání
+            yield return null;
+        }
+
+        // pøipravíme persistentTransition, aby po naètení scény pøehrál close a pak roztmavil
+        if (persistentTransition != null)
+        {
+            persistentTransition.SetCloseClip(doorClose);
+            persistentTransition.SetAudioSource(persistentAudioSource);
+        }
+
+        // naèti další scénu asynchronnì až po dohrání open
+        var asyncOp = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        while (!asyncOp.isDone)
+            yield return null;
+
+        // po naètení: persistentTransition zpracuje pøehrání close + fade-in
+    }
+
+    IEnumerator FadeScreenTo(float targetAlpha)
+    {
+        // vybereme image: preferuj persistent, pak pøiøazený fadeImage
+        EnsurePersistentFadeExists();
+        Image img = persistentFadeImage != null ? persistentFadeImage : fadeImage;
+        if (img == null)
+            yield break;
+
+        float speed = 2f;
+        float startAlpha = img.color.a;
+        float time = 0f;
+
+        while (time < 1f)
+        {
+            time += Time.deltaTime * speed;
+            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, time);
+            Color c = img.color;
+            img.color = new Color(c.r, c.g, c.b, newAlpha);
+            yield return null;
+        }
+
+        // ensure final alpha
+        Color final = img.color;
+        img.color = new Color(final.r, final.g, final.b, targetAlpha);
+    }
+
+    void EnsurePersistentFadeExists()
+    {
+        if (persistentFadeImage != null && persistentFadeGO != null)
+            return;
+
+        // vytvoøíme Canvas + Image, pokud neexistuje
+        persistentFadeGO = new GameObject("PersistentFadeCanvas");
+        var canvas = persistentFadeGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 10000; // hodnì nahoøe
+        persistentFadeGO.AddComponent<CanvasScaler>();
+        persistentFadeGO.AddComponent<GraphicRaycaster>();
+
+        // child image
+        GameObject imgGO = new GameObject("FadeImage");
+        imgGO.transform.SetParent(persistentFadeGO.transform, false);
+        var img = imgGO.AddComponent<Image>();
+        img.color = new Color(0f, 0f, 0f, 0f);
+
+        // roztažení na celou obrazovku
+        var rt = imgGO.GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.sizeDelta = Vector2.zero;
+        rt.anchoredPosition = Vector2.zero;
+
+        persistentFadeImage = img;
+
+        // pøidáme komponentu, která pøežije naètení scény a vykoná fade-in + pøehrání zavíracího zvuku
+        persistentTransition = persistentFadeGO.AddComponent<PersistentTransition>();
+        persistentTransition.Setup(persistentFadeImage);
+
+        DontDestroyOnLoad(persistentFadeGO);
+    }
+
+    void PreparePersistentAudioForClose()
+    {
+        // pokud už máme persistent audio, použijeme ho
+        if (persistentAudioSource != null)
+            return;
+
+        // vytvoøíme persistentní GameObject s AudioSource
+        persistentAudioGO = new GameObject("PersistentAudio");
+        persistentAudioSource = persistentAudioGO.AddComponent<AudioSource>();
+        persistentAudioSource.playOnAwake = false;
+        persistentAudioSource.spatialBlend = 0f; // 2D
+        DontDestroyOnLoad(persistentAudioGO);
+
+        // pøedáme persistentní audio komponentì fade GO (pokud existuje)
+        if (persistentTransition != null)
+            persistentTransition.SetAudioSource(persistentAudioSource);
+    }
+
+    void CleanupPersistentAudio()
+    {
+        if (persistentAudioGO != null)
+            Destroy(persistentAudioGO);
+        persistentAudioGO = null;
+        persistentAudioSource = null;
+    }
+
+    void CleanupPersistentFade()
+    {
+        if (persistentFadeGO != null)
+            Destroy(persistentFadeGO);
+        persistentFadeGO = null;
+        persistentFadeImage = null;
+        persistentTransition = null;
+    }
+
+    // Odhlášení handleru pro pøípad, že objekt bude znièen døíve, než pøijde event
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // bezpeèné no-op pokud nebylo pøidáno
+    }
+
+    // Tento OnSceneLoaded zùstává jako fallback (nespoléháme na nìj; persistentTransition dìlá práci)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // fallback - nic nedìláme, persistentTransition spravuje fade-in
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -38,7 +215,8 @@ public class DoorInteraction : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             playerIsNear = true;
-            UIManager.Instance.ShowText(interactionText);
+            if (UIManager.Instance != null)
+                UIManager.Instance.ShowText(interactionText);
         }
     }
 
@@ -47,7 +225,96 @@ public class DoorInteraction : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             playerIsNear = false;
-            UIManager.Instance.HideText();
+            if (UIManager.Instance != null)
+                UIManager.Instance.HideText();
+        }
+    }
+
+    // persistent helper class: žije na persistentFadeGO a obslouží fade-in po naètení scény
+    private class PersistentTransition : MonoBehaviour
+    {
+        private Image fadeImage;
+        private AudioSource persistentAudio;
+        private AudioClip closeClip;
+        private float fadeSpeed = 2f;
+        private bool started = false;
+        private bool closePlayed = false;
+
+        public void Setup(Image img)
+        {
+            fadeImage = img;
+            // Pøihlásíme se na sceneLoaded pøímo z tohoto persistentního objektu
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        public void SetAudioSource(AudioSource src)
+        {
+            persistentAudio = src;
+        }
+
+        public void SetCloseClip(AudioClip clip)
+        {
+            closeClip = clip;
+        }
+
+        private IEnumerator PlayCloseDelayCoroutine(float delay)
+        {
+            if (delay > 0f)
+                yield return new WaitForSeconds(delay);
+
+            if (!closePlayed && persistentAudio != null && closeClip != null)
+            {
+                persistentAudio.PlayOneShot(closeClip);
+                closePlayed = true;
+                yield return new WaitForSeconds(closeClip.length);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            // spuštìní pouze jednou
+            if (started)
+                return;
+            started = true;
+
+            // spustíme coroutine pro pøípad, že close ještì nebìžel, a pro fade-in
+            StartCoroutine(PlayCloseIfNeededThenFadeInAndCleanup());
+        }
+
+        private IEnumerator PlayCloseIfNeededThenFadeInAndCleanup()
+        {
+            if (!closePlayed && persistentAudio != null && closeClip != null)
+            {
+                persistentAudio.PlayOneShot(closeClip);
+                closePlayed = true;
+                yield return new WaitForSeconds(closeClip.length);
+            }
+
+            // fade in: z 1 -> 0
+            if (fadeImage != null)
+            {
+                float startAlpha = fadeImage.color.a;
+                float time = 0f;
+                while (time < 1f)
+                {
+                    time += Time.deltaTime * fadeSpeed;
+                    float newAlpha = Mathf.Lerp(startAlpha, 0f, time);
+                    Color c = fadeImage.color;
+                    fadeImage.color = new Color(c.r, c.g, c.b, newAlpha);
+                    yield return null;
+                }
+                // ensure final alpha
+                Color final = fadeImage.color;
+                fadeImage.color = new Color(final.r, final.g, final.b, 0f);
+            }
+
+            // po dokonèení fade-inu smažeme persistentní objekty
+            Destroy(gameObject);
         }
     }
 }
