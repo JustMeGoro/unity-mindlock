@@ -4,18 +4,24 @@ using UnityEngine.UI; // pokud používáš UI Text (Canvas)
 
 public class DoorInteraction : MonoBehaviour
 {
+    public static DoorInteraction Instance;
+
     [Header("UI Settings")]
-    public GameObject interactionText; // objekt s Textem nebo TMP_Textem
+    public string interactionText; // obsah interaction textu
 
     [Header("Player Detection")]
     public string playerTag = "Player"; // tag hráèe
 
     private bool playerIsNear = false;
 
-    void Start()
+    private void Awake()
     {
-        if (interactionText != null)
-            interactionText.SetActive(false); // text je skrytý na zaèátku
+        Instance = this;
+    }
+
+    private void Start()
+    {
+        playerIsNear = false;
     }
 
     void Update()
@@ -32,8 +38,7 @@ public class DoorInteraction : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             playerIsNear = true;
-            if (interactionText != null)
-                interactionText.SetActive(true);
+            UIManager.Instance.ShowText(interactionText);
         }
     }
 
@@ -42,8 +47,7 @@ public class DoorInteraction : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             playerIsNear = false;
-            if (interactionText != null)
-                interactionText.SetActive(false);
+            UIManager.Instance.HideText();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -6,42 +7,77 @@ public enum itemType    // list itemù
     Cogwheel
 }
 
-public class PickupItem : MonoBehaviour, IInteractable
+public class PickupItem : MonoBehaviour
 {
+    public static PickupItem Instance;
+
+    [Header("Item options")]
     // volby v inspektoru
     public string itemName = "Item"; 
     public itemType itemType;
     public Sprite itemIcon;
 
+    [Header("Text options")]
+    public string interactionText;
+
+
     public AudioSource cogwheelPickupAudioSource;
 
-    public string GetPromptMessage()
+
+    private static int playersInTrigger = 0;
+    private bool playerInRange = false;
+
+    private void Awake()
     {
-        if (PlayerInteractor.Instance.isHoldingItem == false) //pokud postava nic nedrží tak...
+        Instance = this;
+    }
+
+    private void Update()
+    {
+        if (playerInRange && Input.GetKeyDown(KeyCode.E) && InventoryUI.Instance.isHoldingItem == false)
         {
-            return "press E to pick up " + itemName; // napíše jaký item mùže postava vzít
+            Pickup();
         }
-        else
+        else if (playerInRange && InventoryUI.Instance.isHoldingItem == true)
         {
-            return "you are already holding something"; // napíše že už nìco postava drží
+            UIManager.Instance.ShowText("You are already holding something");
         }
     }
 
-    public void Interact()
+    private void Pickup()
     {
+        Debug.Log(itemName + " was picked up!");
+        UIManager.Instance.HideText();
 
-        if (PlayerInteractor.Instance.isHoldingItem == true) // pokud nìco postava drží tak se okamžitì vráti
-        {
-            return;
-        }
-
-        Debug.Log("Picked up " + itemName); 
-
-        InventoryUI.instance.AddItem(itemIcon); // pøidá do slotu obrázek itemu
+        InventoryUI.Instance.AddItem(itemIcon);
         cogwheelPickupAudioSource.Play();
-        gameObject.SetActive(false); // item zmizí ze zemì
 
-        PlayerInteractor.Instance.isHoldingItem = true; // zmìní bool že postava nìco drží
+        gameObject.SetActive(false);
+        InventoryUI.Instance.isHoldingItem = true;
+    }
 
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = true;
+            playersInTrigger++;
+            UIManager.Instance.ShowText(interactionText);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playersInTrigger--;
+            if (playersInTrigger <= 0)
+            {
+                playerInRange = false;
+                UIManager.Instance.HideText();
+                playersInTrigger = 0;
+            }
+        }
     }
 }
