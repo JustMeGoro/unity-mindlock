@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class BoilerInteract : MonoBehaviour
 {
-    public TMP_Text interactionText;
     public string playerTag = "Player";
+    [Space(1)]
+    public string interactionText;
     public GameObject cogwheelOnBoiler;
     public AudioSource metalClank;
     private bool playerInRange = false;
@@ -13,46 +14,41 @@ public class BoilerInteract : MonoBehaviour
     void Start()
     {
         cogwheelOnBoiler.SetActive(false);
-        if (interactionText != null)
-            interactionText.enabled = false;
     }
 
     void Update()
     {
         bool allPipesReady = AreAllPipesReady();
 
-        if (playerInRange && PlayerInteractor.Instance.isHoldingItem && !cogwheelInPlace)
+        if (playerInRange && InventoryUI.Instance.isHoldingItem == true && !cogwheelInPlace)
         {
             if (!allPipesReady)
             {
-                interactionText.text = "The pipes are missing cogwheels!";
-                interactionText.enabled = true;
+                UIManager.Instance.ShowText("The pipes are missing cogwheels!");
                 return;
             }
 
             if (interactionText != null)
             {
-                interactionText.text = "Press E to place final cogwheel";
-                interactionText.enabled = true;
+                UIManager.Instance.ShowText(interactionText);
             }
 
             if (Input.GetKeyDown(KeyCode.E))
             {
                 cogwheelOnBoiler.SetActive(true);
                 cogwheelInPlace = true;
-                PlayerInteractor.Instance.isHoldingItem = false;
-                interactionText.enabled = false;
+                InventoryUI.Instance.isHoldingItem = false;
+                UIManager.Instance.HideText();
                 metalClank.Play();
                 Debug.Log("Final cogwheel placed!");
 
                 TypewriterEffect.Instance.RemoveObjective();
 
-
             }
         }
         else if (interactionText != null)
         {
-            interactionText.enabled = false;
+
         }
     }
 
@@ -69,12 +65,17 @@ public class BoilerInteract : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag(playerTag))
+        {
             playerInRange = true;
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag(playerTag))
+        {
             playerInRange = false;
+            UIManager.Instance.HideText();
+        }
     }
 }

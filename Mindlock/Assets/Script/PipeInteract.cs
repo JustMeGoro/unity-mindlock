@@ -11,7 +11,7 @@ public class PipeInteract : MonoBehaviour
 
     public AudioSource metalClank;
 
-    public TMP_Text interactionText;       // UI text "Press E to place cogwheel"
+    public string interactionText;       // UI text "Press E to place cogwheel"
     public string playerTag = "Player";
 
     public GameObject cogwheelOnPipe;
@@ -23,13 +23,8 @@ public class PipeInteract : MonoBehaviour
     void Start()
     {
         allPipes.Add(this);
-
         // cogwheel zpoèátku skrytý
         cogwheelOnPipe.SetActive(false);
-
-        // Text zpoèátku skrytý
-        if (interactionText != null)
-            interactionText.enabled = false;
     }
 
     void OnDestroy()
@@ -39,41 +34,28 @@ public class PipeInteract : MonoBehaviour
 
     void Update()
     {
-        // pokud je hráè v dosahu, zobraz text
-        if (playerInRange && PlayerInteractor.Instance != null && PlayerInteractor.Instance.isHoldingItem == true && cogwheelInPlace == false)
+        if (playerInRange && InventoryUI.Instance.isHoldingItem == true && Input.GetKeyDown(KeyCode.E) && cogwheelInPlace == false)
         {
-            if (interactionText != null && !interactionText.enabled)
-            {
-                interactionText.text = "Press E to place cogwheel";
-                interactionText.enabled = true;
-                Debug.Log("Cogwheel was placed on a pipe");
-            }
+            PlaceOnPipe();
+        }
+    }
 
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.Log("E pressed");
-                cogwheelOnPipe.SetActive(true);
-                cogwheelInPlace = true;
-                PlayerInteractor.Instance.isHoldingItem = false;
-                cogwheelPlaced++;
-                metalClank.Play();
-                
-            }
-        }
-        else
-        {
-            // pokud hráè odejde, skryj text
-            if (interactionText != null && interactionText.enabled)
-                interactionText.enabled = false;
-            Debug.Log("Exited range");
-        }
+    void PlaceOnPipe()
+    {
+        metalClank.Play();
+        InventoryUI.Instance.slot.enabled = false;
+        InventoryUI.Instance.isHoldingItem = false;
+        UIManager.Instance.HideText();
+        cogwheelOnPipe.SetActive(true);
+        cogwheelInPlace = true;
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(playerTag))
+        if (other.CompareTag(playerTag) && cogwheelInPlace == false)
         {
             playerInRange = true;
+            UIManager.Instance.ShowText(interactionText);
         }
     }
 
@@ -82,6 +64,7 @@ public class PipeInteract : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             playerInRange = false;
+            UIManager.Instance.HideText();
         }
     }
 }

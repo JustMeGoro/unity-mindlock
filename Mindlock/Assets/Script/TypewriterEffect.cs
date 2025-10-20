@@ -6,22 +6,27 @@ public class TypewriterEffect : MonoBehaviour
 {
     public static TypewriterEffect Instance;
 
+    [Header("Object and delay selector")]
     // Zvolení objektù
     public TMP_Text objectiveTitle;   // Text pro "OBJECTIVE"
     public TMP_Text objectiveText;    // Text pro samotný úkol
     public CanvasGroup objectiveUnderline; // Podtrhnutí
 
+    // Urèení delayù
+    public float letterDelay = 0.1f;
+    public float startDelay = 1f; // èekání pøed zaèátkem
+
+    [Header("Text options")]
     // Co se kde napíše
     public string title = "OBJECTIVE"; 
     public string task = "Stop the gas";
 
-    // Urèení delayù
-    public float letterDelay = 0.05f;
-    public float startDelay = 1f; // èekání pøed zaèátkem
-
-    // Volba audia
+    [Header("Audio options")]
+    // Volba audiosource
     public AudioSource audioSource;
-    public AudioClip typeSound;
+    // AudioClips
+    public AudioClip typingSound;
+    public AudioClip backspaceSound;
 
     void Awake()
     {
@@ -42,7 +47,7 @@ public class TypewriterEffect : MonoBehaviour
 
         // Spustíme zvuk
         audioSource.loop = true; // aby se opakoval, pokud je krátký
-        audioSource.clip = typeSound;
+        audioSource.clip = typingSound;
         audioSource.Play();
 
         // Efekt psaní pro title
@@ -77,12 +82,21 @@ public class TypewriterEffect : MonoBehaviour
 
     private IEnumerator RemoveTaskCoroutine(float delay)
     {
+        // Spustíme zvuk
+        audioSource.loop = true; // aby se opakoval, pokud je krátký
+        audioSource.clip = backspaceSound;
+        audioSource.Play();
+
         // Odmazávání textu úkolu po písmenech
         while (objectiveText.text.Length > 0)
         {
             objectiveText.text = objectiveText.text.Substring(0, objectiveText.text.Length - 1);
             yield return new WaitForSeconds(delay);
         }
+
+        // Po dokonèení zastav zvuk
+        audioSource.Stop();
+        audioSource.loop = false;
     }
 
     IEnumerator FadeIn(CanvasGroup group, float duration)
