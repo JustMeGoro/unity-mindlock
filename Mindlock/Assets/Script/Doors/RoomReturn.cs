@@ -21,8 +21,6 @@ public class RoomReturn : MonoBehaviour
     public Animator doorAnimator;
     public string openTrigger = "Open";
 
-    public Transform spawnPoint;
-
     private bool playerIsNear = false;
     private bool isTransitioning = false;
 
@@ -81,12 +79,7 @@ public class RoomReturn : MonoBehaviour
             persistentTransition.SetAudioSource(persistentAudioSource);
         }
 
-        // Uložení jména dveří pro návrat (volitelně)
-        PlayerPrefs.SetString("ReturnDoor", gameObject.name);
-        // příznak pro to, že se vracíme do SampleScene
-        PlayerPrefs.SetInt("ReturnToSampleScene", 1);
-
-        var asyncOp = SceneManager.LoadSceneAsync("SampleScene"); // nebo index, pokud používáš index
+        var asyncOp = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
         while (!asyncOp.isDone)
             yield return null;
     }
@@ -231,60 +224,6 @@ public class RoomReturn : MonoBehaviour
 
         private IEnumerator PlayCloseThenFadeInAndCleanup()
         {
-            // Pokud se vracíme, najdi InteractionRange, jehož rodič je DoorsHitbox
-            if (PlayerPrefs.GetInt("ReturnToSampleScene", 0) == 1)
-            {
-                GameObject spawnMark = null;
-
-                // Nejprve přímo najít DoorsHitbox a potom jeho dítě InteractionRange
-                GameObject doorsHitbox = GameObject.Find("DoorsHitbox");
-                if (doorsHitbox != null)
-                {
-                    Transform child = doorsHitbox.transform.Find("InteractionRange");
-                    if (child != null)
-                        spawnMark = child.gameObject;
-                }
-
-                // Fallback: prohledat všechny Transformy a najít InteractionRange s rodičem DoorsHitbox
-                if (spawnMark == null)
-                {
-                    var all = Object.FindObjectsByType<Transform>(FindObjectsSortMode.None);
-                    foreach (var t in all)
-                    {
-                        if (t.name == "InteractionRange" && t.parent != null && t.parent.name == "DoorsHitbox")
-                        {
-                            spawnMark = t.gameObject;
-                            break;
-                        }
-                    }
-                }
-
-                if (spawnMark != null)
-                {
-                    GameObject player = GameObject.FindWithTag("Player");
-                    if (player != null)
-                    {
-                        // Zastavit fyziku pokud existuje (opravena vlastnost)
-                        var rb2 = player.GetComponent<Rigidbody2D>();
-                        if (rb2 != null)
-                        {
-                            rb2.linearVelocity = Vector2.zero;
-                            rb2.angularVelocity = 0f;
-                        }
-                        var rb3 = player.GetComponent<Rigidbody>();
-                        if (rb3 != null)
-                        {
-                            rb3.linearVelocity = Vector3.zero;
-                            rb3.angularVelocity = Vector3.zero;
-                        }
-
-                        player.transform.position = spawnMark.transform.position;
-                    }
-                }
-
-                PlayerPrefs.DeleteKey("ReturnToSampleScene");
-            }
-
             if (!closePlayed && persistentAudio != null && closeClip != null)
             {
                 persistentAudio.PlayOneShot(closeClip);
