@@ -2,9 +2,9 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
-public class TypewriterEffect : MonoBehaviour
+public class Room1ObjectiveUI : MonoBehaviour
 {
-    public static TypewriterEffect Instance;
+    public static Room1ObjectiveUI Instance;
 
     [Header("Object and delay selector")]
     // Zvolení objektù

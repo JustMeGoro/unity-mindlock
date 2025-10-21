@@ -45,9 +45,13 @@ public class DoorInteraction : MonoBehaviour
 
     void Update()
     {
-        if (playerIsNear && !isTransitioning && Input.GetKeyDown(KeyCode.E))
+        if (playerIsNear && !isTransitioning && Input.GetKeyDown(KeyCode.E) && BoilerInteract.Instance.objectiveCompleted == true)
         {
             StartCoroutine(EnterNextRoom());
+        }
+        else if (playerIsNear && !isTransitioning && BoilerInteract.Instance.objectiveCompleted == false)
+        {
+            UIManager.Instance.ShowText("Doors are locked");
         }
     }
 

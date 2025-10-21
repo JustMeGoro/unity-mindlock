@@ -3,13 +3,22 @@ using UnityEngine;
 
 public class BoilerInteract : MonoBehaviour
 {
+    public static BoilerInteract Instance;
+
     public string playerTag = "Player";
     [Space(1)]
     public string interactionText;
     public GameObject cogwheelOnBoiler;
     public AudioSource metalClank;
     private bool playerInRange = false;
+
     private bool cogwheelInPlace = false;
+    public bool objectiveCompleted = false;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -43,7 +52,9 @@ public class BoilerInteract : MonoBehaviour
                 metalClank.Play();
                 Debug.Log("Final cogwheel placed!");
 
-                TypewriterEffect.Instance.RemoveObjective();
+                objectiveCompleted = true;
+
+                Room1ObjectiveUI.Instance.RemoveObjective();
 
             }
         }
