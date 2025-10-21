@@ -37,6 +37,7 @@ public class BoilerInteract : MonoBehaviour
             {
                 cogwheelOnBoiler.SetActive(true);
                 cogwheelInPlace = true;
+                InventoryUI.Instance.slot.enabled = false;
                 InventoryUI.Instance.isHoldingItem = false;
                 UIManager.Instance.HideText();
                 metalClank.Play();
