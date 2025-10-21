@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 922fb0b071ffcf146ace49b4bcdc0241
+guid: 1520b6f557f215f42a48145f851a4a3b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3939238698976365547
-    second: doors_from_top 1_0
+      213: 9148426637580132103
+    second: doors_from_top_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,10 +113,10 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a9506477f93795d42a0f905a4dbf4ef7
-      internalID: -1527117285
+      spriteID: 70f5fa27e8db5fe70800000000000000
+      internalID: 9148426637580132103
       vertices: []
       indices: 
       edges: []
@@ -137,8 +137,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7c61ad8324be6774b8006b2bab5ffc6f
-      internalID: 604025612
+      spriteID: 14fe98b4608922d498eadd30da86b6f5
+      internalID: -1589208285
       vertices: []
       indices: 
       edges: []
@@ -159,8 +159,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0eac3c06fe779f140a6701507e335c6d
-      internalID: 2060090720
+      spriteID: 278410987e0cb9b4391769cee5c20767
+      internalID: -722695220
       vertices: []
       indices: 
       edges: []
@@ -181,8 +181,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 22657e498aba48146b0739f35807ecd4
-      internalID: -1039544791
+      spriteID: 2d3a4bcf25a43314486fec6cb90e65aa
+      internalID: 135734263
       vertices: []
       indices: 
       edges: []
@@ -191,7 +191,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d3a222f2c6c0ec443ba2b4183baca7ca
+    spriteID: 1565be6df17c8f440a7496065abafcd3
     internalID: 0
     vertices: []
     indices: 
@@ -203,10 +203,10 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      doors_from_top_0: -1527117285
-      doors_from_top_1: 604025612
-      doors_from_top_2: 2060090720
-      doors_from_top_3: -1039544791
+      doors_from_top_0: 9148426637580132103
+      doors_from_top_1: -1589208285
+      doors_from_top_2: -722695220
+      doors_from_top_3: 135734263
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: doors_from_top_3
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
-  m_Sprite: {fileID: -1039544791, guid: 922fb0b071ffcf146ace49b4bcdc0241, type: 3}
+  m_Sprite: {fileID: 135734263, guid: 1520b6f557f215f42a48145f851a4a3b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
