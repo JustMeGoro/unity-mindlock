@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -7,7 +7,7 @@ public class VolumeInitializer : MonoBehaviour
     private const string MasterKey = "masterVolume";
     private const string MusicKey = "musicVolume";
 
-    // Spustí se ještì pøed naètením první scény -> nastaví master hned
+    // Spustï¿½ se jeï¿½tï¿½ pï¿½ed naï¿½tenï¿½m prvnï¿½ scï¿½ny -> nastavï¿½ master hned
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void InitAtStartup()
     {
@@ -17,7 +17,7 @@ public class VolumeInitializer : MonoBehaviour
         float music = PlayerPrefs.GetFloat(MusicKey, 1f);
         ApplyMusicVolume(music);
 
-        // reapply po jednom snímku pro AudioSources vytvoøené v Start()
+        // reapply po jednom snï¿½mku pro AudioSources vytvoï¿½enï¿½ v Start()
         var helperGO = new GameObject("VolumeInitHelper");
         Object.DontDestroyOnLoad(helperGO);
         helperGO.AddComponent<VolumeReapplyHelper>().StartReapply(music);
@@ -35,7 +35,7 @@ public class VolumeInitializer : MonoBehaviour
         helperGO.AddComponent<VolumeReapplyHelper>().StartReapply(music);
     }
 
-    // Pokud máš tento skript pøipojený na GameObject, necháme i Awake fallback
+    // Pokud mï¿½ tento skript pï¿½ipojenï¿½ na GameObject, nechï¿½me i Awake fallback
     void Awake()
     {
         float master = PlayerPrefs.GetFloat(MasterKey, 1f);
@@ -52,7 +52,7 @@ public class VolumeInitializer : MonoBehaviour
         ApplyMusicVolume(music);
     }
 
-    // Aplikuje hlasitost pouze na zdroje oznaèené tagem "Music"
+    // Aplikuje hlasitost pouze na zdroje oznaï¿½enï¿½ tagem "Music"
     private static void ApplyMusicVolume(float linear)
     {
         linear = Mathf.Clamp01(linear);
@@ -64,7 +64,7 @@ public class VolumeInitializer : MonoBehaviour
         }
         catch
         {
-            // tag nemusí být definovaný -> nic neaplikujeme
+            // tag nemusï¿½ bï¿½t definovanï¿½ -> nic neaplikujeme
             return;
         }
 
@@ -76,7 +76,7 @@ public class VolumeInitializer : MonoBehaviour
         }
     }
 
-    // Pomocník pro reapply po jednom frame (static initializer nemùže coroutine pøímo)
+    // Pomocnï¿½k pro reapply po jednom frame (static initializer nemï¿½ï¿½e coroutine pï¿½ï¿½mo)
     private class VolumeReapplyHelper : MonoBehaviour
     {
         private float vol;
