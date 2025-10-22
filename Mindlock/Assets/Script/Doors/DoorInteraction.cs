@@ -13,9 +13,9 @@ public class DoorInteraction : MonoBehaviour
     public string playerTag = "Player"; // tag hráèe
 
     [Header("Audio")]
-    public AudioSource audioSource;
-    public AudioClip doorOpen;
-    public AudioClip doorClose;
+    // místo AudioClipù: pøiøadíš dva AudioSource (každý má svùj clip nastavený v Inspectoru)
+    public AudioSource openAudioSource;
+    public AudioSource closeAudioSource;
 
     [Header("Animation")]
     public Animator doorAnimator; // Animator dveøí (volitelný)
@@ -28,7 +28,8 @@ public class DoorInteraction : MonoBehaviour
     private GameObject persistentFadeGO;
     private Image persistentFadeImage;
     private GameObject persistentAudioGO;
-    private AudioSource persistentAudioSource;
+    private AudioSource persistentOpenAudioSource;
+    private AudioSource persistentCloseAudioSource;
 
     // persistent helper on the persistent fade GO (survives scene load)
     private PersistentTransition persistentTransition;
@@ -74,15 +75,17 @@ public class DoorInteraction : MonoBehaviour
         PreparePersistentAudioForClose();
 
         // pøehraj open na persistentním source (fallback na lokální pokud persistent chybí)
-        if (persistentAudioSource != null && doorOpen != null)
+        if (persistentOpenAudioSource != null && openAudioSource != null && openAudioSource.clip != null)
         {
-            persistentAudioSource.PlayOneShot(doorOpen);
-            yield return new WaitForSeconds(doorOpen.length);
+            // persistentOpenAudioSource.clip už nastaven v PreparePersistentAudioForClose
+            // persistentní source má nastavenou hlasitost podle uloženého SFX
+            persistentOpenAudioSource.Play();
+            yield return new WaitForSeconds(openAudioSource.clip.length);
         }
-        else if (audioSource != null && doorOpen != null)
+        else if (openAudioSource != null && openAudioSource.clip != null)
         {
-            audioSource.PlayOneShot(doorOpen);
-            yield return new WaitForSeconds(doorOpen.length);
+            openAudioSource.Play();
+            yield return new WaitForSeconds(openAudioSource.clip.length);
         }
         else
         {
@@ -93,8 +96,7 @@ public class DoorInteraction : MonoBehaviour
         // pøipravíme persistentTransition, aby po naètení scény pøehrál close a pak roztmavil
         if (persistentTransition != null)
         {
-            persistentTransition.SetCloseClip(doorClose);
-            persistentTransition.SetAudioSource(persistentAudioSource);
+            persistentTransition.SetCloseAudioSource(persistentCloseAudioSource);
         }
 
         // naèti další scénu asynchronnì až po dohrání open
@@ -169,19 +171,45 @@ public class DoorInteraction : MonoBehaviour
     void PreparePersistentAudioForClose()
     {
         // pokud už máme persistent audio, použijeme ho
-        if (persistentAudioSource != null)
+        if (persistentOpenAudioSource != null && persistentCloseAudioSource != null)
             return;
 
-        // vytvoøíme persistentní GameObject s AudioSource
+        // vytvoøíme persistentní GameObject s dvìma AudioSource
         persistentAudioGO = new GameObject("PersistentAudio");
-        persistentAudioSource = persistentAudioGO.AddComponent<AudioSource>();
-        persistentAudioSource.playOnAwake = false;
-        persistentAudioSource.spatialBlend = 0f; // 2D
+        persistentOpenAudioSource = persistentAudioGO.AddComponent<AudioSource>();
+        persistentCloseAudioSource = persistentAudioGO.AddComponent<AudioSource>();
+
+        persistentOpenAudioSource.playOnAwake = false;
+        persistentOpenAudioSource.spatialBlend = 0f; // 2D
+        persistentCloseAudioSource.playOnAwake = false;
+        persistentCloseAudioSource.spatialBlend = 0f; // 2D
+
+        // Zkopíruj clipy z lokálních zdrojù (pokud existují), aby persistentní zdroje mìly clip i po naèítání scény
+        if (openAudioSource != null && openAudioSource.clip != null)
+            persistentOpenAudioSource.clip = openAudioSource.clip;
+        if (closeAudioSource != null && closeAudioSource.clip != null)
+            persistentCloseAudioSource.clip = closeAudioSource.clip;
+
+        // nastav poèáteèní hlasitost podle uloženého SFX v SoundManager a lokální relativní hlasitosti
+        float sfxSaved = PlayerPrefs.GetFloat(SoundManager.SfxKey, 1f);
+        persistentOpenAudioSource.volume = sfxSaved * (openAudioSource != null ? openAudioSource.volume : 1f);
+        persistentCloseAudioSource.volume = sfxSaved * (closeAudioSource != null ? closeAudioSource.volume : 1f);
+
+        // pokusíme se oznaèit persistentní GO tagem "SFX", aby tvùj SoundManager ho nalezl pøi dalším Apply
+        try
+        {
+            persistentAudioGO.tag = "SFX";
+        }
+        catch
+        {
+            // pokud tag "SFX" neexistuje v projektu, ignore
+        }
+
         DontDestroyOnLoad(persistentAudioGO);
 
-        // pøedáme persistentní audio komponentì fade GO (pokud existuje)
+        // pøedáme persistentní audio komponentì fade GO (pokud existuje) pouze close source (ta se pøehraje po naètení)
         if (persistentTransition != null)
-            persistentTransition.SetAudioSource(persistentAudioSource);
+            persistentTransition.SetCloseAudioSource(persistentCloseAudioSource);
     }
 
     void CleanupPersistentAudio()
@@ -189,7 +217,8 @@ public class DoorInteraction : MonoBehaviour
         if (persistentAudioGO != null)
             Destroy(persistentAudioGO);
         persistentAudioGO = null;
-        persistentAudioSource = null;
+        persistentOpenAudioSource = null;
+        persistentCloseAudioSource = null;
     }
 
     void CleanupPersistentFade()
@@ -238,8 +267,7 @@ public class DoorInteraction : MonoBehaviour
     private class PersistentTransition : MonoBehaviour
     {
         private Image fadeImage;
-        private AudioSource persistentAudio;
-        private AudioClip closeClip;
+        private AudioSource persistentCloseAudio;
         private float fadeSpeed = 2f;
         private bool started = false;
         private bool closePlayed = false;
@@ -251,14 +279,9 @@ public class DoorInteraction : MonoBehaviour
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        public void SetAudioSource(AudioSource src)
+        public void SetCloseAudioSource(AudioSource src)
         {
-            persistentAudio = src;
-        }
-
-        public void SetCloseClip(AudioClip clip)
-        {
-            closeClip = clip;
+            persistentCloseAudio = src;
         }
 
         private IEnumerator PlayCloseDelayCoroutine(float delay)
@@ -266,11 +289,11 @@ public class DoorInteraction : MonoBehaviour
             if (delay > 0f)
                 yield return new WaitForSeconds(delay);
 
-            if (!closePlayed && persistentAudio != null && closeClip != null)
+            if (!closePlayed && persistentCloseAudio != null && persistentCloseAudio.clip != null)
             {
-                persistentAudio.PlayOneShot(closeClip);
+                persistentCloseAudio.PlayOneShot(persistentCloseAudio.clip);
                 closePlayed = true;
-                yield return new WaitForSeconds(closeClip.length);
+                yield return new WaitForSeconds(persistentCloseAudio.clip.length);
             }
         }
 
@@ -292,11 +315,11 @@ public class DoorInteraction : MonoBehaviour
 
         private IEnumerator PlayCloseIfNeededThenFadeInAndCleanup()
         {
-            if (!closePlayed && persistentAudio != null && closeClip != null)
+            if (!closePlayed && persistentCloseAudio != null && persistentCloseAudio.clip != null)
             {
-                persistentAudio.PlayOneShot(closeClip);
+                persistentCloseAudio.PlayOneShot(persistentCloseAudio.clip);
                 closePlayed = true;
-                yield return new WaitForSeconds(closeClip.length);
+                yield return new WaitForSeconds(persistentCloseAudio.clip.length);
             }
 
             // fade in: z 1 -> 0
