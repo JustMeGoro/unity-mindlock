@@ -6,8 +6,9 @@ public class VolumeInitializer : MonoBehaviour
 {
     private const string MasterKey = "masterVolume";
     private const string MusicKey = "musicVolume";
+    private const string SfxKey = "sfxVolume";
 
-    // Spust� se je�t� p�ed na�ten�m prvn� sc�ny -> nastav� master hned
+    // Spustí se ještě před načtením první scény -> nastaví master hned
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void InitAtStartup()
     {
@@ -17,10 +18,14 @@ public class VolumeInitializer : MonoBehaviour
         float music = PlayerPrefs.GetFloat(MusicKey, 1f);
         ApplyMusicVolume(music);
 
-        // reapply po jednom sn�mku pro AudioSources vytvo�en� v Start()
+        float sfx = PlayerPrefs.GetFloat(SfxKey, 1f);
+        ApplySfxVolume(sfx);
+
+        // reapply po jednom snímku pro AudioSources vytvořené v Start()
         var helperGO = new GameObject("VolumeInitHelper");
         Object.DontDestroyOnLoad(helperGO);
-        helperGO.AddComponent<VolumeReapplyHelper>().StartReapply(music);
+        helperGO.AddComponent<VolumeReapplyHelper>().StartReapply(music, true);
+        helperGO.AddComponent<VolumeReapplyHelper>().StartReapply(sfx, false);
 
         SceneManager.sceneLoaded += OnSceneLoadedStatic;
     }
@@ -30,12 +35,16 @@ public class VolumeInitializer : MonoBehaviour
         float music = PlayerPrefs.GetFloat(MusicKey, 1f);
         ApplyMusicVolume(music);
 
+        float sfx = PlayerPrefs.GetFloat(SfxKey, 1f);
+        ApplySfxVolume(sfx);
+
         var helperGO = new GameObject("VolumeInitHelper");
         Object.DontDestroyOnLoad(helperGO);
-        helperGO.AddComponent<VolumeReapplyHelper>().StartReapply(music);
+        helperGO.AddComponent<VolumeReapplyHelper>().StartReapply(music, true);
+        helperGO.AddComponent<VolumeReapplyHelper>().StartReapply(sfx, false);
     }
 
-    // Pokud m� tento skript p�ipojen� na GameObject, nech�me i Awake fallback
+    // Pokud má tento skript připojený na GameObject, necháme i Awake fallback
     void Awake()
     {
         float master = PlayerPrefs.GetFloat(MasterKey, 1f);
@@ -44,6 +53,10 @@ public class VolumeInitializer : MonoBehaviour
         float music = PlayerPrefs.GetFloat(MusicKey, 1f);
         ApplyMusicVolume(music);
         StartCoroutine(ReapplyNextFrame(music));
+
+        float sfx = PlayerPrefs.GetFloat(SfxKey, 1f);
+        ApplySfxVolume(sfx);
+        StartCoroutine(ReapplySfxNextFrame(sfx));
     }
 
     private IEnumerator ReapplyNextFrame(float music)
@@ -52,7 +65,13 @@ public class VolumeInitializer : MonoBehaviour
         ApplyMusicVolume(music);
     }
 
-    // Aplikuje hlasitost pouze na zdroje ozna�en� tagem "Music"
+    private IEnumerator ReapplySfxNextFrame(float sfx)
+    {
+        yield return null;
+        ApplySfxVolume(sfx);
+    }
+
+    // Aplikuje hlasitost pouze na zdroje označené tagem "Music"
     private static void ApplyMusicVolume(float linear)
     {
         linear = Mathf.Clamp01(linear);
@@ -64,7 +83,7 @@ public class VolumeInitializer : MonoBehaviour
         }
         catch
         {
-            // tag nemus� b�t definovan� -> nic neaplikujeme
+            // tag nemusí být definovaný -> nic neaplikujeme
             return;
         }
 
@@ -76,20 +95,51 @@ public class VolumeInitializer : MonoBehaviour
         }
     }
 
-    // Pomocn�k pro reapply po jednom frame (static initializer nem��e coroutine p��mo)
+    // Aplikuje hlasitost pouze na zdroje označené tagem "SFX"
+    private static void ApplySfxVolume(float linear)
+    {
+        linear = Mathf.Clamp01(linear);
+
+        GameObject[] sfxObjects;
+        try
+        {
+            sfxObjects = GameObject.FindGameObjectsWithTag("SFX");
+        }
+        catch
+        {
+            // tag nemusí být definovaný -> nic neaplikujeme
+            return;
+        }
+
+        foreach (var go in sfxObjects)
+        {
+            var src = go.GetComponent<AudioSource>();
+            if (src != null)
+                src.volume = linear;
+        }
+    }
+
+    // Pomocník pro reapply po jednom frame (static initializer nemůže coroutine přímo)
     private class VolumeReapplyHelper : MonoBehaviour
     {
         private float vol;
-        public void StartReapply(float volume)
+        private bool isMusic;
+
+        // isMusic == true -> aplikuje Music, false -> aplikuje SFX
+        public void StartReapply(float volume, bool applyMusic)
         {
             vol = volume;
+            isMusic = applyMusic;
             StartCoroutine(Reapply());
         }
 
         private IEnumerator Reapply()
         {
             yield return null;
-            ApplyMusicVolume(vol);
+            if (isMusic)
+                ApplyMusicVolume(vol);
+            else
+                ApplySfxVolume(vol);
             Destroy(gameObject);
         }
     }
