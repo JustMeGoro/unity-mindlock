@@ -15,6 +15,8 @@ public class BoilerInteract : MonoBehaviour
     private bool cogwheelInPlace = false;
     public bool objectiveCompleted = false;
 
+    public GasLeakController gasLeak;
+
     private void Awake()
     {
         Instance = this;
@@ -44,17 +46,25 @@ public class BoilerInteract : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.E))
             {
+                // hlavní zmìny trubky a plynu
+                metalClank.Play();
                 cogwheelOnBoiler.SetActive(true);
                 cogwheelInPlace = true;
-                InventoryUI.Instance.slot.enabled = false;
-                InventoryUI.Instance.isHoldingItem = false;
-                UIManager.Instance.HideText();
-                metalClank.Play();
+                gasLeak.StopGas();
                 Debug.Log("Final cogwheel placed!");
 
+                // zmìny v inventáøi
+                InventoryUI.Instance.slot.enabled = false;
+                InventoryUI.Instance.isHoldingItem = false;
+
+                // vypne interaction text
+                UIManager.Instance.HideText();
+
+                // nastavení objectivu
+                Room1ObjectiveUI.Instance.RemoveObjective();
                 objectiveCompleted = true;
 
-                Room1ObjectiveUI.Instance.RemoveObjective();
+                PlayerLightAlarmController.Instance.DeactivateAlarm();
 
             }
         }

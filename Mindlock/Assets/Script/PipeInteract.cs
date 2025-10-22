@@ -20,6 +20,8 @@ public class PipeInteract : MonoBehaviour
     public bool cogwheelInPlace = false;
     public int cogwheelPlaced = 0;
 
+    public GasLeakController gasLeak;
+
     void Start()
     {
         allPipes.Add(this);
@@ -42,12 +44,20 @@ public class PipeInteract : MonoBehaviour
 
     void PlaceOnPipe()
     {
+        // hlavní změny plynu a trubky
         metalClank.Play();
-        InventoryUI.Instance.slot.enabled = false;
-        InventoryUI.Instance.isHoldingItem = false;
-        UIManager.Instance.HideText();
         cogwheelOnPipe.SetActive(true);
         cogwheelInPlace = true;
+        gasLeak.StopGas();
+
+
+        // změny v inventáři
+        InventoryUI.Instance.slot.enabled = false;
+        InventoryUI.Instance.isHoldingItem = false;
+
+        // vypne interaction text
+        UIManager.Instance.HideText();
+        
     }
 
     void OnTriggerEnter2D(Collider2D other)

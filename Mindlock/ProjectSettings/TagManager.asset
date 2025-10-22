@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Music
   - SFX
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Items
   - Tilemaps
   - 
-  - 
-  - 
+  - AlarmLightsLights
+  - AlarmLights
   - 
   - 
   - 
@@ -51,6 +52,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 469424461
+    locked: 0
+  - name: GasLeak
+    uniqueID: 622613453
     locked: 0
   m_RenderingLayers:
   - Default
