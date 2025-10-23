@@ -26,7 +26,13 @@ public class PlayerLightAlarmController : MonoBehaviour
     private float defaultRadius;
     private float defaultIntensity;
 
-    private bool alarmActive = false;
+    public float fadeSpeed = 2f; // rychlost ztlumení
+    private bool fadingOut = false;
+
+
+
+    public bool alarmActive = false;
+    public bool systemsOnline = false;
     private float pulseTimer = 0f;
 
     private void Awake()
@@ -60,20 +66,33 @@ public class PlayerLightAlarmController : MonoBehaviour
             playerLight.pointLightOuterRadius = Mathf.Lerp(alarmMinRadius, alarmMaxRadius, t);
             playerLight.intensity = Mathf.Lerp(alarmMinIntensity, alarmMaxIntensity, t);
         }
+        else if (!alarmActive && !systemsOnline)
+        {
+            fadingOut = true;
+
+            if (fadingOut)
+            {
+                // plynule snižuj intenzitu do nuly
+                playerLight.intensity = Mathf.MoveTowards(playerLight.intensity, 0f, fadeSpeed * Time.deltaTime);
+            }
+            else
+            {
+                // Plynulý návrat na původní hodnoty
+                playerLight.intensity = Mathf.MoveTowards(playerLight.intensity, defaultIntensity, fadeSpeed * Time.deltaTime);
+                playerLight.pointLightOuterRadius = Mathf.MoveTowards(playerLight.pointLightOuterRadius, defaultRadius, fadeSpeed * 3f * Time.deltaTime);
+                playerLight.color = Color.Lerp(playerLight.color, defaultColor, fadeSpeed * Time.deltaTime);
+            }
+        }
         else
         {
+            /*
             // NORMÁLNÍ mód — návrat k uloženým hodnotám
             playerLight.color = Color.Lerp(playerLight.color, defaultColor, Time.deltaTime * transitionSpeed);
             playerLight.pointLightOuterRadius = Mathf.Lerp(playerLight.pointLightOuterRadius, defaultRadius, Time.deltaTime * transitionSpeed);
             playerLight.intensity = Mathf.Lerp(playerLight.intensity, defaultIntensity, Time.deltaTime * transitionSpeed);
+            */
         }
 
-        // 🔸 Testovací přepínač (můžeš odstranit)
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            if (alarmActive) DeactivateAlarm();
-            else ActivateAlarm();
-        }
     }
 
     public void ActivateAlarm()
@@ -85,7 +104,9 @@ public class PlayerLightAlarmController : MonoBehaviour
     public void DeactivateAlarm()
     {
         alarmActive = false;
+        systemsOnline = false;
         alarmSound.Stop();
     }
+
 }
 
