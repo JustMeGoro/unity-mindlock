@@ -97,6 +97,9 @@ public class SimpleMonitorPulse : MonoBehaviour
             yield return null;
         }
 
+        // povolí přístup k počítači
+        MonitorUI.Instance.isComputerAccesable = true;
+
         // zapni pulzování
         pulsing = true;
         while (pulsing)
