@@ -13,7 +13,7 @@ public class MonitorUI : MonoBehaviour
 
     [Header("Interaction")]
     public bool playerInRange = false;
-    public bool isComputerAccesable = true;      // pokud je false, hráè nemùže interagovat (kontrolováno v triggeru)
+    public bool isComputerAccesable = false;      // pokud je false, hráè nemùže interagovat (kontrolováno v triggeru)
     public bool monitorOpen = false;
     private void Awake()
     {
@@ -26,13 +26,9 @@ public class MonitorUI : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I) && monitorOpen == false)
+        if (Input.GetKeyDown(KeyCode.E) && isComputerAccesable && playerInRange)
         {
             OpenMonitor();
-        }
-        else if (Input.GetKeyDown(KeyCode.I) && monitorOpen == true)
-        {
-            CloseMonitor();
         }
     }
 
