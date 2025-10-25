@@ -30,6 +30,10 @@ public class MonitorUI : MonoBehaviour
         {
             OpenMonitor();
         }
+        else if (Input.GetKeyDown(KeyCode.Escape) && monitorOpen)
+        {
+            CloseMonitor();
+        }
     }
 
 
