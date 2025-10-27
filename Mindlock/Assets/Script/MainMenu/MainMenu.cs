@@ -13,30 +13,30 @@ public class MainMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(delaySeconds);
 
-        //Ověří, zda je uložená poslední scéna
+        //Načti uloženou scénu
         string lastScene = PlayerPrefs.GetString("LastScene", "");
+        Debug.Log("Poslední scéna uložená v PlayerPrefs: " + lastScene);
 
         if (!string.IsNullOrEmpty(lastScene))
         {
-            // Uloží ji znovu pro jistotu (aby LoadingScreen věděl, co má načíst)
             PlayerPrefs.SetString("SceneToLoad", lastScene);
+            Debug.Log("SceneToLoad nastaveno na: " + lastScene);
         }
         else
         {
-            // Fallback – třeba první level
             PlayerPrefs.SetString("SceneToLoad", "Level1");
+            Debug.Log("Žádná scéna nebyla nalezena, načítám Level1");
         }
 
         PlayerPrefs.Save();
 
-        //Přepni na loading screen
+        Debug.Log("Přepínám na LoadingScreen...");
         SceneManager.LoadScene("LoadingScreen");
     }
 
     public void Quit()
     {
         Application.Quit();
-        Debug.Log("Player has quit the game");
+        Debug.Log("Hráč ukončil hru");
     }
 }
-

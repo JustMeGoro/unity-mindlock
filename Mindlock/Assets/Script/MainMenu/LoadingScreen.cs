@@ -31,15 +31,26 @@ public class LoadingScreen : MonoBehaviour
     IEnumerator FakeLoadingProgress()
     {
         float progress = 0f;
+        float elapsedTime = 0f;
 
+        //Získáme scénu, kterou chceme načíst
+        string sceneToLoad = PlayerPrefs.GetString("SceneToLoad", "Level1");
+        Debug.Log("Načítám scénu: " + sceneToLoad);
+
+        //Spustíme async načítání, ale nedovolíme aktivaci hned
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoad);
+        operation.allowSceneActivation = false;
+
+        //Simulace postupu načítání
         while (progress < 100f)
         {
+            elapsedTime += Time.deltaTime;
             progress += Random.Range(1f, 5f);
             progressText.text = Mathf.Clamp(progress, 0, 100).ToString("F0") + "%";
             yield return new WaitForSeconds(0.2f);
         }
 
-        // načtení přepnout do jiné scény
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //povolíme načtení scény
+        operation.allowSceneActivation = true;
     }
 }
