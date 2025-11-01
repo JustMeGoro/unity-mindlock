@@ -56,6 +56,9 @@ TagManager:
   - name: GasLeak
     uniqueID: 622613453
     locked: 0
+  - name: InFrontOfPlayer
+    uniqueID: 3858128111
+    locked: 0
   m_RenderingLayers:
   - Default
   - Player
