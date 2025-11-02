@@ -15,19 +15,24 @@ public class MonitorUI : MonoBehaviour
     public bool playerInRange = false;
     public bool isComputerAccesable = false;      // pokud je false, hráè nemùže interagovat (kontrolováno v triggeru)
     public bool monitorOpen = false;
+
+    [Header("Game Objects")]
+    public GameObject ObjectiveText;
+    public GameObject InventorySlot;
+
+
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Start()
-    {
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E) && isComputerAccesable && playerInRange)
         {
+            ObjectiveText.SetActive(false);
+            InventorySlot.SetActive(false);
+
             OpenMonitor();
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && monitorOpen)
@@ -59,6 +64,8 @@ public class MonitorUI : MonoBehaviour
     {
         monitorUIAnimator.SetBool("isOpen", true);
         monitorOpen = true;
+
+        ComputerConsole.Instance.ActivateComputer();
     }
 
     public void CloseMonitor()

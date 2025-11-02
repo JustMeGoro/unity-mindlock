@@ -63,6 +63,9 @@ public class SimpleMonitorPulse : MonoBehaviour
 
     private IEnumerator BeginPulseAfterDelay()
     {
+        // povolí přístup k počítači
+        MonitorUI.Instance.isComputerAccesable = true;
+
         // počkej na start, ale kontroluj stav každým snímkem
         float waited = 0f;
         while (waited < startDelay)
@@ -96,9 +99,6 @@ public class SimpleMonitorPulse : MonoBehaviour
             SetSpriteAlpha(newIntensity * spriteFadeMultiplier);
             yield return null;
         }
-
-        // povolí přístup k počítači
-        MonitorUI.Instance.isComputerAccesable = true;
 
         // zapni pulzování
         pulsing = true;
