@@ -21,6 +21,9 @@ public class ComputerConsole : MonoBehaviour
     private bool busy = true; // aby nešlo psát bìhem animace
     private bool rebooted = false;
 
+    // odemèení dveøí 
+    public bool doorsUnlocked = false;
+
     void Start()
     {
         Instance = this;
@@ -44,7 +47,7 @@ public class ComputerConsole : MonoBehaviour
         computerAudioSource.PlayOneShot(beep);
 
         consoleText.text =
-            "GOROCORP SYSTEM TERMINAL v2.4\n" +
+            "GURTCORP SYSTEM TERMINAL v2.4\n" +
             "-----------------------------------\n" +
             "> ALERT: Gas leak detected in Sector B.\n" +
             "> Automatic lockdown engaged.\n" +
@@ -90,7 +93,7 @@ public class ComputerConsole : MonoBehaviour
         {
             computerAudioSource.PlayOneShot(beep);
 
-            consoleText.text = "GOROCORP SYSTEM TERMINAL v2.4\n" +
+            consoleText.text = "GURTCORP SYSTEM TERMINAL v2.4\n" +
             "-----------------------------------\n" +
             "> ALERT: Gas leak detected in Sector B.\n" +
             "> Automatic lockdown engaged.\n" +
@@ -108,7 +111,7 @@ public class ComputerConsole : MonoBehaviour
         busy = true;
         inputField.DeactivateInputField();
 
-        consoleText.text = "GOROCORP SYSTEM TERMINAL v2.4\n" +
+        consoleText.text = "GURTCORP SYSTEM TERMINAL v2.4\n" +
                     "-----------------------------------\n";
 
         computerAudioSource.PlayOneShot(beep);
@@ -128,7 +131,7 @@ public class ComputerConsole : MonoBehaviour
             yield return new WaitForSeconds(1.0f);
         }
 
-        consoleText.text = "GOROCORP SYSTEM TERMINAL v2.4\n" +
+        consoleText.text = "GURTCORP SYSTEM TERMINAL v2.4\n" +
                             "-----------------------------------\n";
 
 
@@ -156,7 +159,10 @@ public class ComputerConsole : MonoBehaviour
         consoleText.text += "<color=#00FF00><b>> ALL DOORS UNLOCKED</b></color>\n ";
         consoleText.text += "<color=#00260f>> (press enter to exit console)</color>\n ";
         Canvas.ForceUpdateCanvases();
-
+        
+        doorsUnlocked = true;
         rebooted = true;
+        PlayerLightAlarmController.Instance.systemsOnline = true;
+        MonitorUI.Instance.isComputerAccesable = false;
     }
 }

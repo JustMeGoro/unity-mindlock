@@ -85,12 +85,12 @@ public class PlayerLightAlarmController : MonoBehaviour
         }
         else
         {
-            /*
+
             // NORMÁLNÍ mód — návrat k uloženým hodnotám
             playerLight.color = Color.Lerp(playerLight.color, defaultColor, Time.deltaTime * transitionSpeed);
             playerLight.pointLightOuterRadius = Mathf.Lerp(playerLight.pointLightOuterRadius, defaultRadius, Time.deltaTime * transitionSpeed);
             playerLight.intensity = Mathf.Lerp(playerLight.intensity, defaultIntensity, Time.deltaTime * transitionSpeed);
-            */
+
         }
 
     }

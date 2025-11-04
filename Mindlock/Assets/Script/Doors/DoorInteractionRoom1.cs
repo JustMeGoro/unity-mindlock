@@ -5,6 +5,8 @@ using System.Collections;
 
 public class DoorInteraction : MonoBehaviour
 {
+    public static DoorInteraction instance;
+
     [Header("UI Settings")]
     public string interactionText = "Press E to enter"; // text u dveøí
     public Image fadeImage; // UI Image (èerný fade panel) - nepovinné, fallback se vytvoøí automaticky
@@ -34,6 +36,11 @@ public class DoorInteraction : MonoBehaviour
     // persistent helper on the persistent fade GO (survives scene load)
     private PersistentTransition persistentTransition;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         // pokud už máš pøiøazený fadeImage nastav jeho prùhlednost
@@ -46,11 +53,11 @@ public class DoorInteraction : MonoBehaviour
 
     void Update()
     {
-        if (playerIsNear && !isTransitioning && Input.GetKeyDown(KeyCode.E) && BoilerInteract.Instance.objectiveCompleted == true)
+        if (ComputerConsole.Instance.doorsUnlocked && playerIsNear && !isTransitioning && Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(EnterNextRoom());
         }
-        else if (playerIsNear && !isTransitioning && BoilerInteract.Instance.objectiveCompleted == false)
+        else if (!ComputerConsole.Instance.doorsUnlocked && playerIsNear && !isTransitioning)
         {
             UIManager.Instance.ShowText("Doors are locked");
         }

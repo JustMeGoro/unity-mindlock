@@ -4,8 +4,17 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    public static PauseMenu Instance;
+
     public static bool paused = false;
     public GameObject PauseMenuCanvas;
+
+    public bool canPause = true;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -14,7 +23,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (canPause && Input.GetKeyDown(KeyCode.Escape))
         {
             if (paused)
             {

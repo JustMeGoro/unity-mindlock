@@ -28,16 +28,12 @@ public class MonitorUI : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isComputerAccesable && playerInRange)
+        if (Input.GetKeyDown(KeyCode.E) && isComputerAccesable && playerInRange && !monitorOpen)
         {
             ObjectiveText.SetActive(false);
             InventorySlot.SetActive(false);
 
             OpenMonitor();
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape) && monitorOpen)
-        {
-            CloseMonitor();
         }
     }
 
@@ -62,15 +58,25 @@ public class MonitorUI : MonoBehaviour
 
     public void OpenMonitor()
     {
+        PauseMenu.Instance.canPause = false;
+
         monitorUIAnimator.SetBool("isOpen", true);
         monitorOpen = true;
 
         ComputerConsole.Instance.ActivateComputer();
+
+        // zak·zat pohyb hr·Ëe
+        PlayerMovement.Instance.canMove = false;
     }
 
     public void CloseMonitor()
     {
+        PauseMenu.Instance.canPause = true;
+
         monitorUIAnimator.SetBool("isOpen", false);
         monitorOpen = false;
+
+        // povolit pohyb hr·Ëe
+        PlayerMovement.Instance.canMove = true;
     }
 }

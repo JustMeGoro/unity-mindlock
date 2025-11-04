@@ -5,6 +5,8 @@ using UnityEngine.Tilemaps;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public static PlayerMovement Instance;
+
     public Animator anim;
     private bool moving;
 
@@ -17,12 +19,16 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 moveDirection;
 
+    public bool canMove = true;
 
     // zvuk krokù
     public AudioSource footstepSource;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
 
-    // Update is called once per frame
     void Update()
     {
         inputProccesing();
@@ -32,15 +38,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        if (canMove)
+        {
+            Move();
+        }
     }
 
     void inputProccesing()
     {
-        moveX = Input.GetAxisRaw("Horizontal");
-        moveY = Input.GetAxisRaw("Vertical");
+        if (canMove)
+        {
+            moveX = Input.GetAxisRaw("Horizontal");
+            moveY = Input.GetAxisRaw("Vertical");
 
-        moveDirection = new Vector2(moveX, moveY).normalized;
+            moveDirection = new Vector2(moveX, moveY).normalized;
+        }
     }
 
     void Move()
