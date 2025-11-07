@@ -6,11 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class LoadingScreen : MonoBehaviour
 {
+    public static LoadingScreen Instance;
+
     public TextMeshProUGUI loadingText;
     public TextMeshProUGUI progressText;
 
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
+        PlayerPrefs.SetFloat("SavedVolume", AudioListener.volume);
+        AudioListener.volume = 0;
+
         StartCoroutine(AnimateLoadingText());
         StartCoroutine(FakeLoadingProgress());
     }
@@ -34,12 +45,13 @@ public class LoadingScreen : MonoBehaviour
         float elapsedTime = 0f;
 
         //Získáme scénu, kterou chceme načíst
-        string sceneToLoad = PlayerPrefs.GetString("SceneToLoad", "Level1");
+        string sceneToLoad = "SampleScene"; //výchozí hodnota
         Debug.Log("Načítám scénu: " + sceneToLoad);
 
         //Spustíme async načítání, ale nedovolíme aktivaci hned
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoad);
         operation.allowSceneActivation = false;
+        Debug.Log("async načítání scény spuštěno.");
 
         //Simulace postupu načítání
         while (progress < 100f)

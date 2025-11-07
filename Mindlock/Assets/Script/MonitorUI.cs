@@ -35,6 +35,11 @@ public class MonitorUI : MonoBehaviour
 
             OpenMonitor();
         }
+
+        if (playerInRange && !isComputerAccesable)
+        {
+            UIManager.Instance.HideText();
+        }
     }
 
 

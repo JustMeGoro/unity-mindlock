@@ -35,6 +35,8 @@ public class ComputerConsole : MonoBehaviour
     public void ActivateComputer()
     {
         bootVideo.Play();
+
+        Room1ObjectiveUI.Instance.objectiveText.text = "";
     }
 
     void OnBootEnd(VideoPlayer vp)
@@ -77,6 +79,9 @@ public class ComputerConsole : MonoBehaviour
 
             MonitorUI.Instance.ObjectiveText.SetActive(true);
             MonitorUI.Instance.InventorySlot.SetActive(true);
+
+
+            StartCoroutine(Room1ObjectiveUI.Instance.ShowNextObjective("- Exit the room"));
         }
     }
 
