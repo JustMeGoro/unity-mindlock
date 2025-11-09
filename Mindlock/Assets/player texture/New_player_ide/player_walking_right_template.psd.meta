@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b1ffc77460b64224d94918754644744d
+guid: b5d525dfcdbda5744be9af4854bdbc4e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5702243651236859242
-    second: player_idle_left-removebg-preview_0
+      213: 2463401687676241009
+    second: player_walking_right_template_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: player_idle_left-removebg-preview_0
+      name: player_walking_right_template_0
       rect:
         serializedVersion: 2
-        x: 121
-        y: 87
-        width: 175
-        height: 423
+        x: 12
+        y: 3
+        width: 146
+        height: 393
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 692fc496c9f8dd0b0800000000000000
-      internalID: -5702243651236859242
+      spriteID: 1744a0588c2cf2220800000000000000
+      internalID: 2463401687676241009
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      player_idle_left-removebg-preview_0: -5702243651236859242
+      player_walking_right_template_0: 2463401687676241009
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

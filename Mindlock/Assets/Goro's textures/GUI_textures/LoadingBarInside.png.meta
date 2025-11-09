@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4dc5196196759d548a456ba5b8149662
+guid: c4d168f5756fd9d4cad790c6e1ee4d15
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8630021429914967148
-    second: 340034a49b9cc2f5c5d5b709ce24645a_0
+      213: 7941330356820237792
+    second: LoadingBarInside_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 340034a49b9cc2f5c5d5b709ce24645a_0
+      name: LoadingBarInside_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 736
-        height: 451
+        x: 6
+        y: 2
+        width: 109
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 493e8e9bb310c3880800000000000000
-      internalID: -8630021429914967148
+      spriteID: 0eddb4272e5453e60800000000000000
+      internalID: 7941330356820237792
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      340034a49b9cc2f5c5d5b709ce24645a_0: -8630021429914967148
+      LoadingBarInside_0: 7941330356820237792
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

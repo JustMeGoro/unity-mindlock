@@ -1,24 +1,31 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using TMPro;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class Room1ObjectiveUI : MonoBehaviour
 {
     public static Room1ObjectiveUI Instance;
+    public TimeBar timeBar;
+
 
     [Header("Object and delay selector")]
-    // ZvolenÌ objekt˘
+    // Zvolen√≠ objekt≈Ø
     public TMP_Text objectiveTitle;   // Text pro "OBJECTIVE"
-    public TMP_Text objectiveText;    // Text pro samotn˝ ˙kol
-    public CanvasGroup objectiveUnderline; // PodtrhnutÌ
+    public TMP_Text objectiveText;    // Text pro samotn√Ω √∫kol
+    public CanvasGroup objectiveTextAplha; // Pro fade in/out textu √∫kolu
+    public CanvasGroup objectiveUnderline; // Podtrhnut√≠
 
-    // UrËenÌ delay˘
+    [Space(10)]
+    // Urƒçen√≠ ƒças≈Ø
     public float letterDelay = 0.1f;
-    public float startDelay = 1f; // Ëek·nÌ p¯ed zaË·tkem
+    public float startDelay = 1f; // ƒçek√°n√≠ p≈ôed zaƒç√°tkem
+    public float removeDuration = 1f; // 
 
     [Header("Text options")]
-    // Co se kde napÌöe
+    // Co se kde nap√≠≈°e
     public string title = "OBJECTIVE"; 
     public string task = " ";
 
@@ -30,10 +37,13 @@ public class Room1ObjectiveUI : MonoBehaviour
     public AudioClip backspaceSound;
 
     private bool objectiveShown = false;
+    private Color mainColor;
 
     void Awake()
     {
         Instance = this;   
+
+        mainColor = objectiveText.color;
     }
 
     void Start()
@@ -59,17 +69,20 @@ public class Room1ObjectiveUI : MonoBehaviour
 
     public IEnumerator ShowNextObjective(string ObjectiveText)
     {
+        objectiveText.color = mainColor;
+        objectiveTextAplha.alpha = 1;
+
         task = ObjectiveText;
         yield return new WaitForSeconds(0.5f);
 
-        // SpustÌme zvuk
-        audioSource.loop = true; // aby se opakoval, pokud je kr·tk˝
+        // Spust√≠me zvuk
+        audioSource.loop = true; // aby se opakoval, pokud je kr√°tk√Ω
         audioSource.clip = typingSound;
         audioSource.Play();
 
 
         ObjectiveNotification.Instance.Show();
-        // Efekt psanÌ pro ˙kol
+        // Efekt psan√≠ pro √∫kol
         foreach (char c in task)
         {
             objectiveText.text += c;
@@ -82,68 +95,77 @@ public class Room1ObjectiveUI : MonoBehaviour
 
     IEnumerator ShowObjective()
     {
+        objectiveTextAplha.alpha = 1;
 
         yield return new WaitForSeconds(startDelay);
 
-        // SpustÌme zvuk
-        audioSource.loop = true; // aby se opakoval, pokud je kr·tk˝
+        // Spust√≠me zvuk
+        audioSource.loop = true; // aby se opakoval, pokud je kr√°tk√Ω
         audioSource.clip = typingSound;
         audioSource.Play();
 
-        // Efekt psanÌ pro title
+        // Efekt psan√≠ pro title
         foreach (char c in title)
         {
             objectiveTitle.text += c;
             yield return new WaitForSeconds(letterDelay);
         }
 
+        ObjectiveNotification.Instance.Show();
+
         audioSource.Stop();
         yield return StartCoroutine(FadeIn(objectiveUnderline, 1f));
         audioSource.Play();
 
-        ObjectiveNotification.Instance.Show();
-        // Efekt psanÌ pro ˙kol
+        // Efekt psan√≠ pro √∫kol
         foreach (char c in task)
         {
             objectiveText.text += c;
             yield return new WaitForSeconds(letterDelay);
         }
 
-        // Po dokonËenÌ zastav zvuk
+        // Po dokonƒçen√≠ zastav zvuk
         audioSource.Stop();
         audioSource.loop = false;
+
+        timeBar.canTimerStart = true;
     }
 
 
     public void RemoveObjective(float letterDelayOverride = -1f)
     {
-        // pokud je -1 pouûij defaultnÌ delay
-        float delay = letterDelayOverride > 0 ? letterDelayOverride : letterDelay;
-        StartCoroutine(RemoveTaskCoroutine(delay));
+
+        StartCoroutine(RemoveTaskCoroutine());
+
+
     }
 
-    private IEnumerator RemoveTaskCoroutine(float delay)
+    private IEnumerator RemoveTaskCoroutine()
     {
-        Color flashColor = new Color(1f, 0.9f, 0.1f); // jemnÏ ûlut· (RGB)
+        // Barva bliknut√≠ p≈ôi dokonƒçen√≠
+        Color flashColor = new Color(1f, 0.9f, 0.1f);
         objectiveText.color = flashColor;
 
-        yield return new WaitForSeconds(0.7f);
+        // pauza p≈ôed zmizen√≠m
+        yield return new WaitForSeconds(2f);
 
-        // SpustÌme zvuk
-        audioSource.loop = true; // aby se opakoval, pokud je kr·tk˝
-        audioSource.clip = backspaceSound;
-        audioSource.Play();
+        float time = 0f;
 
-        // Odmaz·v·nÌ textu ˙kolu po pÌsmenech
-        while (objectiveText.text.Length > 0)
+        Debug.Log("Removing objective text...");
+
+        // ‚úÖ PLYNUL√ù FADE
+        while (time < removeDuration)
         {
-            objectiveText.text = objectiveText.text.Substring(0, objectiveText.text.Length - 1);
-            yield return new WaitForSeconds(delay);
+            time += Time.deltaTime;
+            float t = time / removeDuration;
+
+            objectiveTextAplha.alpha = Mathf.Lerp(1f, 0f, t);
+            yield return null;
         }
 
-        // Po dokonËenÌ zastav zvuk
-        audioSource.Stop();
-        audioSource.loop = false;
+        // ‚úÖ √öpln√© odstranƒõn√≠ po fade-outu
+        objectiveTextAplha.alpha = 0f;
+        objectiveText.text = "";
     }
 
     IEnumerator FadeIn(CanvasGroup group, float duration)
@@ -157,5 +179,10 @@ public class Room1ObjectiveUI : MonoBehaviour
             yield return null;
         }
         group.alpha = 1;
+    }
+
+    public void SceneRestart()
+    {
+        SceneManager.LoadScene("SampleScene");
     }
 }

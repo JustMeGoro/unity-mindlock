@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -7,14 +7,16 @@ public class FadeInStart : MonoBehaviour
 {
     public static FadeInStart Instance;
 
+    public Room1ObjectiveUI room1ObjectiveUI;
+
     [Header("Object selection")]
     public CanvasGroup wakingUpPanel;
 
     [Header("Settings")]
-    public float soundFadeDuration = 1.5f; // Jak dlouho potrvá zesílení zvuku
-    public float screenFadeDuration = 2f;  // Jak dlouho potrvá zmizení obrazovky
-    public float soundStartPercent = 0.3f; // Na kolik procent zvuku se má dostat pøed rozsvícením (0.0 - 1.0)
-    public float delaySeconds = 2f;      // Zpodìní pøed zaèátkem efektu
+    public float soundFadeDuration = 1.5f; // Jak dlouho potrvÃ¡ zesÃ­lenÃ­ zvuku
+    public float screenFadeDuration = 2f;  // Jak dlouho potrvÃ¡ zmizenÃ­ obrazovky
+    public float soundStartPercent = 0.3f; // Na kolik procent zvuku se mÃ¡ dostat pÅ™ed rozsvÃ­cenÃ­m (0.0 - 1.0)
+    public float delaySeconds = 2f;      // ZpoÅ¾dÄ›nÃ­ pÅ™ed zaÄÃ¡tkem efektu
     public bool skipFadeOut = false;
 
     [Header("Helping bool")]
@@ -29,30 +31,22 @@ public class FadeInStart : MonoBehaviour
 
     void Start()
     {
-        if (!skipFadeOut)
-        {
-            // Uloení pùvodní hlasitosti (defaultnì 1.0)
-            targetVolume = PlayerPrefs.GetFloat("SavedVolume", 1f);
+        // UloÅ¾enÃ­ pÅ¯vodnÃ­ hlasitosti (defaultnÄ› 1.0)
+        targetVolume = PlayerPrefs.GetFloat("SavedVolume", 1f);
 
-            // Zaèínáme potichu a s èernou obrazovkou
-            AudioListener.volume = 0f;
-            wakingUpPanel.alpha = 1f;
+        // ZaÄÃ­nÃ¡me potichu a s Äernou obrazovkou
+        AudioListener.volume = 0f;
+        wakingUpPanel.alpha = 1f;
 
 
-            StartCoroutine(FadeOutRoutine(delaySeconds));
-        }
-        else
-        {
-            wakingUpPanel.alpha = 0f;
-            fadingOut = false;
-        }
+        StartCoroutine(FadeOutRoutine(delaySeconds));
     }
 
     IEnumerator FadeOutRoutine(float DelaySeconds)
     {
         yield return new WaitForSeconds(DelaySeconds);
 
-        // ===== FÁZE 1: ZESÍLENÍ ZVUKU =====
+        // ===== FÃZE 1: ZESÃLENÃ ZVUKU =====
         float time = 0f;
         float targetVolumePhase = targetVolume * soundStartPercent;
 
@@ -65,10 +59,10 @@ public class FadeInStart : MonoBehaviour
         }
         AudioListener.volume = targetVolumePhase;
 
-        // *pauza pøed rozsvícením (volitelné)*
+        // *pauza pÅ™ed rozsvÃ­cenÃ­m (volitelnÃ©)*
         // yield return new WaitForSeconds(0.3f);
 
-        // ===== FÁZE 2: MIZENÍ ÈERNÉ OBRAZOVKY + DODATEÈNÉ ZVİŠENÍ VOLUME =====
+        // ===== FÃZE 2: MIZENÃ ÄŒERNÃ‰ OBRAZOVKY + DODATEÄŒNÃ‰ ZVÃÅ ENÃ VOLUME =====
         time = 0f;
         while (time < screenFadeDuration)
         {
@@ -77,7 +71,7 @@ public class FadeInStart : MonoBehaviour
             // Fade obrazovky
             wakingUpPanel.alpha = 1f - t;
 
-            // Dovytaení hlasitosti na finální úroveò
+            // DovytaÅ¾enÃ­ hlasitosti na finÃ¡lnÃ­ ÃºroveÅˆ
             AudioListener.volume = Mathf.Lerp(targetVolumePhase, targetVolume, t);
 
             time += Time.deltaTime;
@@ -87,6 +81,40 @@ public class FadeInStart : MonoBehaviour
         wakingUpPanel.alpha = 0f;
         AudioListener.volume = targetVolume;
         fadingOut = false;
+    }
+
+    public IEnumerator FadeToBlack(float DelaySeconds)
+    {
+        yield return new WaitForSeconds(DelaySeconds);
+
+        // ===== FÃZE 1: ZTLUMENÃ ZVUKU (0 â†’ targetVolume * soundStartPercent pÅ¯jde naopak) =====
+        float time;
+        float startVolume = AudioListener.volume;
+
+        // ===== FÃZE 2: ZATMAVENÃ OBRAZOVKY + DOZTIÅ ENÃ =====
+        time = 0f;
+        float screenStartAlpha = wakingUpPanel.alpha; // obvykle 0f
+        float screenEndAlpha = 1f; // ÃºplnÄ› ÄernÃ¡
+
+        while (time < screenFadeDuration)
+        {
+            float t = time / screenFadeDuration;
+
+            // Fade obrazovky do Äerna
+            wakingUpPanel.alpha = Mathf.Lerp(screenStartAlpha, screenEndAlpha, t);
+            AudioListener.volume = Mathf.Lerp(startVolume, 0f, t);
+
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        wakingUpPanel.alpha = 1f;
+        AudioListener.volume = 0f;
+        fadingOut = false;
+
+        yield return new WaitForSeconds(DelaySeconds);
+        room1ObjectiveUI.SceneRestart();
     }
 
 }

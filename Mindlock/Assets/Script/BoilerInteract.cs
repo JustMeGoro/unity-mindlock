@@ -4,6 +4,8 @@ using UnityEngine;
 public class BoilerInteract : MonoBehaviour
 {
     public static BoilerInteract Instance;
+    public TimeBar timeBar;
+
 
     public string playerTag = "Player";
     [Space(1)]
@@ -66,6 +68,7 @@ public class BoilerInteract : MonoBehaviour
 
                 PlayerLightAlarmController.Instance.DeactivateAlarm();
 
+                StartCoroutine(timeBar.HideBar());
             }
         }
         else if (interactionText != null)

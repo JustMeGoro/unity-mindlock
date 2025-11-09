@@ -59,6 +59,9 @@ TagManager:
   - name: InFrontOfPlayer
     uniqueID: 3858128111
     locked: 0
+  - name: CogwheelPulsing
+    uniqueID: 3878457579
+    locked: 0
   m_RenderingLayers:
   - Default
   - Player
