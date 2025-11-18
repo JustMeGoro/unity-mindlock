@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2a9024bee6b28f846bf6f5197a87c5eb
+guid: aa5214b534be92c49ae9c89bc0fb4499
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -224466427624358315
-    second: superPC_texture_0
+      213: 6598601186114648518
+    second: keypad_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: superPC_texture_0
+      name: keypad_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1536
-        height: 1024
+        x: 227
+        y: 152
+        width: 569
+        height: 721
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 55ef27d29f882ecf0800000000000000
-      internalID: -224466427624358315
+      spriteID: 6c9b5d061d0f29b50800000000000000
+      internalID: 6598601186114648518
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      superPC_texture_0: -224466427624358315
+      keypad_0: 6598601186114648518
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
