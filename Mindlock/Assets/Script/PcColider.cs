@@ -13,6 +13,7 @@ public class PcColider : MonoBehaviour
     public GameObject keypadPanel;
 
     bool playerInside = false;
+    bool isPanelOpen = false;
 
     void Start()
     {
@@ -74,15 +75,41 @@ public class PcColider : MonoBehaviour
     {
         if (!playerInside) return;
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (isPanelOpen == false && Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("PcColider: E stisknuto");
-            GameObject target = keypadPanel != null ? keypadPanel : transform.parent != null ? transform.parent.gameObject : null;
-            if (target != null)
-                target.SetActive(true);
-            if (interactionText != null)
-                interactionText.SetActive(false);
+            OpenPanel();
         }
+        else if (isPanelOpen == true && Input.GetKeyDown(KeyCode.Escape))
+        {
+            ClosePanel();
+        }
+    }
+
+    void OpenPanel()
+    {
+        Debug.Log("PcColider: E stisknuto");
+        GameObject target = keypadPanel != null ? keypadPanel : transform.parent != null ? transform.parent.gameObject : null;
+        if (target != null)
+            target.SetActive(true);
+        if (interactionText != null)
+            interactionText.SetActive(false);
+
+        isPanelOpen = true;
+        PauseMenu.Instance.canPause = false;
+        PlayerMovement.Instance.canMove = false;
+    }
+
+    void ClosePanel()
+    {
+        GameObject target = keypadPanel != null ? keypadPanel : transform.parent != null ? transform.parent.gameObject : null;
+        if (target != null)
+            target.SetActive(false);
+        if (interactionText != null)
+            interactionText.SetActive(true);
+
+        isPanelOpen = false;
+        PauseMenu.Instance.canPause = true;
+        PlayerMovement.Instance.canMove = true;
     }
 
     void SetInteractionText(string text)
