@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,6 +8,7 @@ public class PcColider : MonoBehaviour
 {
     public GameObject interactionText;
     public string prompt = "Press E to open keypad";
+    public string prompt2 = "You already finished this task"; // nový prompt pro dokonèený úkol
     public string playerTag = "Player";
 
     [FormerlySerializedAs("consoleRoot")]
@@ -14,26 +16,35 @@ public class PcColider : MonoBehaviour
 
     bool playerInside = false;
     bool isPanelOpen = false;
+    bool taskFinished = false;
 
     void Start()
     {
         keypadPanel.alpha = 0;
         if (interactionText != null)
             interactionText.SetActive(false);
+
+        var keypadController = keypadPanel.GetComponentInChildren<KeypadController>();
+        if (keypadController != null)
+            keypadController.OnCorrectCode += HandleCorrectCode;
+
+        Application.logMessageReceived += OnLogMessageReceived;
     }
 
-    // 3D trigger
-    void OnTriggerEnter(Collider other)
+    void OnDestroy()
     {
-        HandleEnter(other.gameObject);
+        Application.logMessageReceived -= OnLogMessageReceived;
     }
 
-    void OnTriggerExit(Collider other)
+    void OnLogMessageReceived(string condition, string stackTrace, LogType type)
     {
-        HandleExit(other.gameObject);
+        if (condition.Contains("Correct"))
+        {
+            StartCoroutine(ClosePanelAfterDelay(2.0f));
+        }
     }
 
-    // 2D trigger (pokud používáš 2D collidery)
+    // 2D trigger pouze!
     void OnTriggerEnter2D(Collider2D other)
     {
         HandleEnter(other.gameObject);
@@ -52,7 +63,8 @@ public class PcColider : MonoBehaviour
         playerInside = true;
         if (interactionText != null)
         {
-            SetInteractionText(prompt);
+            // Zde se vždy nastaví správný prompt podle stavu úkolu
+            SetInteractionText(taskFinished ? prompt2 : prompt);
             interactionText.SetActive(true);
             Debug.Log("PcColider: interactionText activated");
         }
@@ -76,11 +88,12 @@ public class PcColider : MonoBehaviour
     {
         if (!playerInside) return;
 
-        if (isPanelOpen == false && Input.GetKeyDown(KeyCode.E))
+        // Panel lze otevøít pouze pokud není dokonèený úkol
+        if (!isPanelOpen && !taskFinished && Input.GetKeyDown(KeyCode.E))
         {
             OpenPanel();
         }
-        else if (isPanelOpen == true && Input.GetKeyDown(KeyCode.Escape))
+        else if (isPanelOpen && Input.GetKeyDown(KeyCode.Escape))
         {
             ClosePanel();
         }
@@ -91,6 +104,9 @@ public class PcColider : MonoBehaviour
         Debug.Log("PcColider: E stisknuto");
         if (keypadPanel != null)
             keypadPanel.alpha = 1;
+        else
+            Debug.LogError("PcColider: keypadPanel není pøiøazen v inspektoru!");
+
         if (interactionText != null)
             interactionText.SetActive(false);
 
@@ -102,9 +118,7 @@ public class PcColider : MonoBehaviour
     void ClosePanel()
     {
         if (keypadPanel != null)
-            keypadPanel.alpha = 0;
-        if (interactionText != null)
-            interactionText.SetActive(true);
+            keypadPanel.gameObject.SetActive(false);
 
         isPanelOpen = false;
         PauseMenu.Instance.canPause = true;
@@ -130,5 +144,23 @@ public class PcColider : MonoBehaviour
         }
 
         Debug.LogWarning("PcColider: interactionText GameObject neobsahuje Text ani TextMeshProUGUI komponentu.");
+    }
+
+    void HandleCorrectCode()
+    {
+        taskFinished = true;
+        StartCoroutine(ClosePanelAfterDelay(2.0f));
+    }
+
+    IEnumerator ClosePanelAfterDelay(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        ClosePanel();
+        // Po zavøení panelu nastavíme prompt2, pokud je hráè uvnitø
+        if (playerInside && interactionText != null)
+        {
+            SetInteractionText(prompt2);
+            interactionText.SetActive(true);
+        }
     }
 }

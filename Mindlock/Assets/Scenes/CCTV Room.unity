@@ -550,7 +550,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -614,7 +614,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3754,7 +3754,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -3818,7 +3818,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4626,7 +4626,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -4690,7 +4690,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -5521,7 +5521,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -5585,7 +5585,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -5666,7 +5666,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -5730,7 +5730,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -6836,6 +6836,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PcColider
   interactionText: {fileID: 932108494}
   prompt: Press E to open keypad
+  prompt2: You already finished this task
   playerTag: Player
   keypadPanel: {fileID: 1966432698}
 --- !u!1 &1330681796
@@ -7030,7 +7031,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -7094,7 +7095,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7228,6 +7229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PcColider
   interactionText: {fileID: 932108494}
   prompt: Press E to open keypad
+  prompt2: You already finished this task
   playerTag: Player
   keypadPanel: {fileID: 1966432698}
 --- !u!1 &1492162958
@@ -7294,7 +7296,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -7358,7 +7360,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7594,13 +7596,11 @@ MonoBehaviour:
   - {fileID: 1897417103}
   - {fileID: 197920963}
   - {fileID: 1971792423}
-  KeypadAudio: {fileID: 1966432699}
-  ButtonPressClips:
-  - {fileID: 8300000, guid: 7f51a4b4417c9824dbc50dc07af8bf0a, type: 3}
-  - {fileID: 8300000, guid: 343091a6b742c994daff9a1bb9bea1af, type: 3}
-  - {fileID: 8300000, guid: 7a00217ecd6be3a4691292b3735cec4b, type: 3}
+  KeypadAudio: {fileID: 800996133}
+  ButtonPressClips: []
   correctSound: {fileID: 8300000, guid: 27ebbf0dc82feb148a18537d9fe0228f, type: 3}
   incorrectSound: {fileID: 8300000, guid: c49241701245a294bbf5d70e473a8b6f, type: 3}
+  buttonClickSound: {fileID: 0}
   correctCode: 8714
   codeLength: 4
   showResultSeconds: 1.5
@@ -10843,7 +10843,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -10907,7 +10907,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -11221,7 +11221,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.40392157, g: 0.38039216, b: 0.34509805, a: 1}
     m_PressedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_SelectedColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
-    m_DisabledColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 0.5019608}
+    m_DisabledColor: {r: 0.7372549, g: 0.6784314, b: 0.60784316, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -11285,7 +11285,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

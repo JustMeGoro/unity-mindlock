@@ -6,16 +6,17 @@ using TMPro;
 public class KeypadController : MonoBehaviour
 {
     [Header("Display")]
-    public TextMeshProUGUI displayTMP; 
+    public TextMeshProUGUI displayTMP;
 
     [Header("Buttons")]
-    public Button[] numberButtons; 
+    public Button[] numberButtons;
 
     [Header("Sound")]
     public AudioSource KeypadAudio;
     public AudioClip[] ButtonPressClips;
     public AudioClip correctSound;    // nový zvuk pro správný kód
     public AudioClip incorrectSound;  // nový zvuk pro špatný kód
+    public AudioClip buttonClickSound; // pøidej do inspektoru
 
     [Header("Settings")]
     public string correctCode = "8714";
@@ -28,16 +29,30 @@ public class KeypadController : MonoBehaviour
 
     Color defaultTMPColor;
 
+    bool closeScheduled = false;
+
+    public event System.Action OnCorrectCode;
+
     void Start()
     {
         if (displayTMP != null) defaultTMPColor = displayTMP.color;
         UpdateDisplay();
     }
 
+    void Update()
+    {
+        if (displayTMP != null && displayTMP.text == "Correct" && !closeScheduled)
+        {
+            closeScheduled = true;
+            StartCoroutine(CloseParentAfterDelay(2.0f));
+        }
+    }
+
     public void PressDigit(int d)
     {
-        RandomButtonSound();
-        KeypadAudio.PlayOneShot(ButtonPressClips[clipIndex]);
+        // Pøehrát zvuk tlaèítka
+        if (buttonClickSound != null)
+            KeypadAudio.PlayOneShot(buttonClickSound);
 
         if (current.Length >= codeLength) return;
         current += d.ToString();
@@ -72,8 +87,9 @@ public class KeypadController : MonoBehaviour
 
         if (ok)
         {
-            yield return new WaitForSeconds(2.0f); // zobrazení "Correct" na 2 sekundy
-            ClosePanel();
+            OnCorrectCode?.Invoke(); // Vyvolá event
+            yield return new WaitForSeconds(2.0f);
+            // Panel zavøe PcColider!
         }
         else
         {
@@ -112,5 +128,14 @@ public class KeypadController : MonoBehaviour
     void RandomButtonSound()
     {
         clipIndex = Random.Range(0, 3);
+    }
+
+    IEnumerator CloseParentAfterDelay(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        if (transform.parent != null)
+            transform.parent.gameObject.SetActive(false);
+        else
+            gameObject.SetActive(false);
     }
 }

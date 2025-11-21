@@ -8,9 +8,8 @@ public class LoadingScreen : MonoBehaviour
 {
     public static LoadingScreen Instance;
 
-    public TextMeshProUGUI loadingText;
+    public Slider loadingBar;
     public TextMeshProUGUI progressText;
-
 
     private void Awake()
     {
@@ -22,47 +21,36 @@ public class LoadingScreen : MonoBehaviour
         PlayerPrefs.SetFloat("SavedVolume", AudioListener.volume);
         AudioListener.volume = 0;
 
-        StartCoroutine(AnimateLoadingText());
-        StartCoroutine(FakeLoadingProgress());
+        StartCoroutine(LoadSceneAsync());
     }
 
-    IEnumerator AnimateLoadingText()
+    IEnumerator LoadSceneAsync()
     {
-        string baseText = "Loading";
-        int dotCount = 0;
-
-        while (true)
-        {
-            dotCount = (dotCount + 1) % 4; // 0,1,2,3 → reset
-            loadingText.text = baseText + new string('.', dotCount);
-            yield return new WaitForSeconds(0.5f);
-        }
-    }
-
-    IEnumerator FakeLoadingProgress()
-    {
-        float progress = 0f;
-        float elapsedTime = 0f;
-
-        //Získáme scénu, kterou chceme načíst
-        string sceneToLoad = "SampleScene"; //výchozí hodnota
-        Debug.Log("Načítám scénu: " + sceneToLoad);
-
-        //Spustíme async načítání, ale nedovolíme aktivaci hned
+        string sceneToLoad = "SampleScene";
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoad);
         operation.allowSceneActivation = false;
-        Debug.Log("async načítání scény spuštěno.");
 
-        //Simulace postupu načítání
-        while (progress < 100f)
+        float targetProgress = 0f;
+
+        while (operation.progress < 0.9f)
         {
-            elapsedTime += Time.deltaTime;
-            progress += Random.Range(1f, 5f);
-            progressText.text = Mathf.Clamp(progress, 0, 100).ToString("F0") + "%";
-            yield return new WaitForSeconds(0.2f);
+            targetProgress = Mathf.Clamp01(operation.progress / 0.9f);
+            loadingBar.value = targetProgress;
+            progressText.text = (targetProgress * 100f).ToString("F0") + "%";
+            yield return null;
         }
 
-        //povolíme načtení scény
+        // Pomalé doplnění z 90% na 100%
+        float fakeProgress = targetProgress;
+        float fillSpeed = 0.15f; // Čím menší, tím pomalejší (např. 0.1f je ještě pomalejší)
+        while (fakeProgress < 1f)
+        {
+            fakeProgress += Time.deltaTime * fillSpeed;
+            loadingBar.value = fakeProgress;
+            progressText.text = (fakeProgress * 100f).ToString("F0") + "%";
+            yield return null;
+        }
+
         operation.allowSceneActivation = true;
     }
 }
