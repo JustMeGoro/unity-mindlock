@@ -10,13 +10,14 @@ public class PcColider : MonoBehaviour
     public string playerTag = "Player";
 
     [FormerlySerializedAs("consoleRoot")]
-    public GameObject keypadPanel;
+    public CanvasGroup keypadPanel;
 
     bool playerInside = false;
     bool isPanelOpen = false;
 
     void Start()
     {
+        keypadPanel.alpha = 0;
         if (interactionText != null)
             interactionText.SetActive(false);
     }
@@ -88,9 +89,8 @@ public class PcColider : MonoBehaviour
     void OpenPanel()
     {
         Debug.Log("PcColider: E stisknuto");
-        GameObject target = keypadPanel != null ? keypadPanel : transform.parent != null ? transform.parent.gameObject : null;
-        if (target != null)
-            target.SetActive(true);
+        if (keypadPanel != null)
+            keypadPanel.alpha = 1;
         if (interactionText != null)
             interactionText.SetActive(false);
 
@@ -101,9 +101,8 @@ public class PcColider : MonoBehaviour
 
     void ClosePanel()
     {
-        GameObject target = keypadPanel != null ? keypadPanel : transform.parent != null ? transform.parent.gameObject : null;
-        if (target != null)
-            target.SetActive(false);
+        if (keypadPanel != null)
+            keypadPanel.alpha = 0;
         if (interactionText != null)
             interactionText.SetActive(true);
 
