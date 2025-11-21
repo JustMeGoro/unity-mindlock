@@ -6,15 +6,16 @@ using TMPro;
 public class KeypadController : MonoBehaviour
 {
     [Header("Display")]
-    public TextMeshProUGUI displayTMP; // pøetáhni CodeDisplay (TMP) nebo
-    public Text displayText;          // pøetáhni klasický Text, pokud nepoužíváš TMP
+    public TextMeshProUGUI displayTMP; 
 
     [Header("Buttons")]
-    public Button[] numberButtons; // pøetáhni sem 9 tlaèítek v Inspectoru
+    public Button[] numberButtons; 
 
     [Header("Sound")]
     public AudioSource KeypadAudio;
     public AudioClip[] ButtonPressClips;
+    public AudioClip correctSound;    // nový zvuk pro správný kód
+    public AudioClip incorrectSound;  // nový zvuk pro špatný kód
 
     [Header("Settings")]
     public string correctCode = "8714";
@@ -25,11 +26,13 @@ public class KeypadController : MonoBehaviour
 
     int clipIndex;
 
+    Color defaultTMPColor;
+
     void Start()
     {
+        if (displayTMP != null) defaultTMPColor = displayTMP.color;
         UpdateDisplay();
     }
-
 
     public void PressDigit(int d)
     {
@@ -41,7 +44,10 @@ public class KeypadController : MonoBehaviour
         UpdateDisplay();
 
         if (current.Length >= codeLength)
+        {
+            SetButtonsInteractable(false); // deaktivace tlaèítek
             StartCoroutine(EvaluateAndReset());
+        }
     }
 
     IEnumerator EvaluateAndReset()
@@ -49,21 +55,58 @@ public class KeypadController : MonoBehaviour
         bool ok = current == correctCode;
         string result = ok ? "Correct" : "Incorrect";
 
-        if (displayTMP != null) displayTMP.text = result;
-        if (displayText != null) displayText.text = result;
+        yield return new WaitForSeconds(0.5f);
+
+        if (displayTMP != null)
+        {
+            displayTMP.text = result;
+            displayTMP.color = ok ? defaultTMPColor : Color.red;
+        }
+
+        if (ok && correctSound != null)
+            KeypadAudio.PlayOneShot(correctSound);
+        else if (!ok && incorrectSound != null)
+            KeypadAudio.PlayOneShot(incorrectSound);
 
         Debug.Log($"KeypadController: entered='{current}' => {result}");
 
-        yield return new WaitForSeconds(showResultSeconds);
+        if (ok)
+        {
+            yield return new WaitForSeconds(2.0f); // zobrazení "Correct" na 2 sekundy
+            ClosePanel();
+        }
+        else
+        {
+            yield return new WaitForSeconds(showResultSeconds);
+            current = "";
+            UpdateDisplay();
+            SetButtonsInteractable(true);
+        }
+    }
 
-        current = "";
-        UpdateDisplay();
+    void ClosePanel()
+    {
+        gameObject.SetActive(false);
+    }
+
+    void SetButtonsInteractable(bool interactable)
+    {
+        if (numberButtons != null)
+        {
+            foreach (var btn in numberButtons)
+            {
+                if (btn != null) btn.interactable = interactable;
+            }
+        }
     }
 
     void UpdateDisplay()
     {
-        if (displayTMP != null) displayTMP.text = current;
-        if (displayText != null) displayText.text = current;
+        if (displayTMP != null)
+        {
+            displayTMP.text = current;
+            displayTMP.color = defaultTMPColor;
+        }
     }
 
     void RandomButtonSound()
