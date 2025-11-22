@@ -16,7 +16,7 @@ public class PcColider : MonoBehaviour
 
     bool playerInside = false;
     bool isPanelOpen = false;
-    bool taskFinished = false;
+    public bool taskFinished = false;
 
     void Start()
     {
@@ -47,7 +47,10 @@ public class PcColider : MonoBehaviour
     // 2D trigger pouze!
     void OnTriggerEnter2D(Collider2D other)
     {
-        HandleEnter(other.gameObject);
+        if (!taskFinished)
+        {
+            HandleEnter(other.gameObject);
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -93,7 +96,7 @@ public class PcColider : MonoBehaviour
         {
             OpenPanel();
         }
-        else if (isPanelOpen && Input.GetKeyDown(KeyCode.Escape))
+        else if (isPanelOpen && Input.GetKeyDown(KeyCode.E))
         {
             ClosePanel();
         }
@@ -101,6 +104,9 @@ public class PcColider : MonoBehaviour
 
     void OpenPanel()
     {
+        if (keypadPanel != null)
+            keypadPanel.gameObject.SetActive(true);
+
         Debug.Log("PcColider: E stisknuto");
         if (keypadPanel != null)
             keypadPanel.alpha = 1;
@@ -119,6 +125,8 @@ public class PcColider : MonoBehaviour
     {
         if (keypadPanel != null)
             keypadPanel.gameObject.SetActive(false);
+
+
 
         isPanelOpen = false;
         PauseMenu.Instance.canPause = true;

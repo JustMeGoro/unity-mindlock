@@ -21,6 +21,8 @@ public class Room2ObjectiveUI : MonoBehaviour
     public string title = "OBJECTIVE";
     public string task = "Stop the gas";
 
+    public string nextTask = "Go to the next room";
+
     [Header("Audio options")]
     // Volba audiosource
     public AudioSource audioSource;
@@ -62,11 +64,36 @@ public class Room2ObjectiveUI : MonoBehaviour
         audioSource.loop = false;
     }
 
+    IEnumerator ShowNextObjective()
+    {
+        Debug.Log("showing next objective");
+        yield return new WaitForSeconds(3);
+
+        // Spustíme zvuk
+        audioSource.loop = true; // aby se opakoval, pokud je krátký
+        audioSource.clip = typingSound;
+        audioSource.Play();
+
+        // Efekt psaní pro úkol
+        foreach (char c in nextTask)
+        {
+            objectiveText.text += c;
+            yield return new WaitForSeconds(letterDelay);
+        }
+
+        // Po dokonèení zastav zvuk
+        audioSource.Stop();
+        audioSource.loop = false;
+    }
+
     public void RemoveObjective(float letterDelayOverride = -1f)
     {
+        Debug.Log("Removing task");
         // pokud je -1 použij defaultní delay
         float delay = letterDelayOverride > 0 ? letterDelayOverride : letterDelay;
         StartCoroutine(RemoveTaskCoroutine(delay));
+
+        StartCoroutine(ShowNextObjective());
     }
 
     private IEnumerator RemoveTaskCoroutine(float delay)
@@ -86,5 +113,7 @@ public class Room2ObjectiveUI : MonoBehaviour
         // Po dokonèení zastav zvuk
         audioSource.Stop();
         audioSource.loop = false;
+
+        ShowNextObjective();
     }
 }

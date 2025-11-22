@@ -5,6 +5,9 @@ using TMPro;
 
 public class KeypadController : MonoBehaviour
 {
+    [Header("Reference")]
+    public PcColider PcColiderScript;
+
     [Header("Display")]
     public TextMeshProUGUI displayTMP;
 
@@ -87,7 +90,9 @@ public class KeypadController : MonoBehaviour
 
         if (ok)
         {
+            PcColiderScript.taskFinished = true;
             OnCorrectCode?.Invoke(); // Vyvolá event
+            Room2ObjectiveUI.Instance.RemoveObjective();
             yield return new WaitForSeconds(2.0f);
             // Panel zavøe PcColider!
         }
