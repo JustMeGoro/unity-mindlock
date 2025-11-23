@@ -156,7 +156,9 @@ public class PcColider : MonoBehaviour
 
     void HandleCorrectCode()
     {
+        
         taskFinished = true;
+        Debug.Log("Task is finished");
         StartCoroutine(ClosePanelAfterDelay(2.0f));
     }
 
