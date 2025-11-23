@@ -1,19 +1,36 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class FinalDoor : MonoBehaviour
 {
     public PcColider pcColider;
-    public AudioSource DoorAudioSource;
+
+    [Header("Door audio settings")]
+    public AudioSource doorAudioSource;
+    public AudioClip doorOpenClose;
+    public AudioSource ambientSound;
+    public AudioSource FinalAudioSource;
     public AudioClip FinalMusic;
+    public GameObject VideoSetActive;
+
     public Image whiteScreenImage;
 
+    [Header("Video settings")]
+    public VideoPlayer finalVideo;
+
     bool playerIsNear;
+    bool alreadyPlaying = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        finalVideo.targetTexture.Release();
+        whiteScreenImage.enabled = false;
+        VideoSetActive.SetActive(false);
+        finalVideo.time= 0;
         Color tempColor = whiteScreenImage.color;
         tempColor.a = 0f; // Alpha 0 = prùhledné
         whiteScreenImage.color = tempColor;
@@ -22,8 +39,9 @@ public class FinalDoor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerIsNear && pcColider.taskFinished && Input.GetKeyDown(KeyCode.E))
+        if (playerIsNear && pcColider.taskFinished && Input.GetKeyDown(KeyCode.E) && !alreadyPlaying)
         {
+            alreadyPlaying = true;
             PlayerMovement.Instance.canMove = false;
             PauseMenu.Instance.canPause = false;
             StartCoroutine(OpenDoor()); 
@@ -53,10 +71,14 @@ public class FinalDoor : MonoBehaviour
 
     IEnumerator OpenDoor()
     {
-        DoorAudioSource.PlayOneShot(FinalMusic);
+        ambientSound.volume = 0;
+        doorAudioSource.PlayOneShot(doorOpenClose);
+        FinalAudioSource.PlayOneShot(FinalMusic);
         StartCoroutine(FadeToWhite());
-        yield return new WaitWhile(() => DoorAudioSource.isPlaying);
-        //zapnevideo
+        yield return new WaitForSeconds(16);
+        VideoSetActive.SetActive(true);
+        finalVideo.Play();
+        finalVideo.loopPointReached += Prepnout;
     }
 
     private IEnumerator FadeToWhite()
@@ -64,6 +86,7 @@ public class FinalDoor : MonoBehaviour
         float timer = 0f;
         float duration = 10.0f; // Jak dlouho to trvá (sekundy)
         Color startColor = whiteScreenImage.color;
+        whiteScreenImage.enabled = true;
 
         // Cílová barva (stejná jako pùvodní, ale Alpha je 1 = neprùhledná)
         Color targetColor = new Color(startColor.r, startColor.g, startColor.b, 1f);
@@ -78,5 +101,11 @@ public class FinalDoor : MonoBehaviour
 
         // Na konci pro jistotu nastavíme èistì bílou
         whiteScreenImage.color = targetColor;
+    }
+
+    void Prepnout(VideoPlayer vp)
+    {
+        // Tady natvrdo pøepneme na scénu MainMenu
+        SceneManager.LoadScene("MainMenu");
     }
 }

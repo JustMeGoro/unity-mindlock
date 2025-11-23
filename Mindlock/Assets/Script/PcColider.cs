@@ -104,6 +104,8 @@ public class PcColider : MonoBehaviour
 
     void OpenPanel()
     {
+        PlayerMovement.Instance.rb.linearVelocity = new Vector2(0, 0);
+
         if (keypadPanel != null)
             keypadPanel.gameObject.SetActive(true);
 

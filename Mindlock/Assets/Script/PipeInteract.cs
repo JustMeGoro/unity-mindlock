@@ -62,10 +62,15 @@ public class PipeInteract : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(playerTag) && cogwheelInPlace == false)
+        playerInRange = true;
+
+        if (other.CompareTag(playerTag) && cogwheelInPlace == false && InventoryUI.Instance.isHoldingItem == true)
         {
-            playerInRange = true;
             UIManager.Instance.ShowText(interactionText);
+        }
+        else if (other.CompareTag(playerTag) && cogwheelInPlace == false && InventoryUI.Instance.isHoldingItem == false)
+        {
+            UIManager.Instance.ShowText("Find cogwheel first");
         }
     }
 

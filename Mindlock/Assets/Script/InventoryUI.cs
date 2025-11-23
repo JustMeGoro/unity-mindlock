@@ -16,7 +16,8 @@ public class InventoryUI : MonoBehaviour
     private void Start()
     {
         slot.enabled = false; // obrázek ve slotu zneviditelní
-    }
+        isHoldingItem = false;
+}
 
     public void AddItem(Sprite newItem)
     {

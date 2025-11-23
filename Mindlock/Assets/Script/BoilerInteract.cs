@@ -89,10 +89,13 @@ public class BoilerInteract : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(playerTag))
+        bool allPipesReady = AreAllPipesReady();
+        playerInRange = true;
+        if (other.CompareTag(playerTag) && !allPipesReady && !InventoryUI.Instance.isHoldingItem)
         {
-            playerInRange = true;
+            UIManager.Instance.ShowText("Place cogwheels on pipes first");
         }
+
     }
 
     void OnTriggerExit2D(Collider2D other)
